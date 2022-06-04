@@ -1,0 +1,20 @@
+C GPL library which implements some classic algorithms.
+
+DESCRIPTION:
+
+C implementation of some basic algorithms:
+1. vector
+2. list
+3. tree's
+4. skiplist
+5. hashtable's
+6. map (based on tree's, hashtable's and skiplist)
+
+Library dealing with void pointers as keys & values of containers.
+
+BUILDING & INSTALL:
+
+autoreconf -fvi
+./configure
+make
+sudo make install
