@@ -125,6 +125,56 @@ int ccl_list_insertion_sort(ccl_list *list)
 	return 0;
 }
 
+ccl_list_iter *ccl_list_push_tail(ccl_list *list, void *v)
+{
+	return ccl_list_append(list, v);
+}
+
+void *ccl_list_pop_tail(ccl_list *list)
+{
+	ccl_list_iter *it;
+	void *v;
+
+	if (list->tail == NULL)
+		return NULL;
+	it = list->tail;
+	v = it->value;
+	if (list->head == list->tail) {
+		list->head = list->tail = NULL;
+	} else {
+		list->tail = it->prev;
+		list->tail->next = NULL;
+	}
+	list->count--;
+	ccl_list_iter_free(it);
+	return v;
+}
+
+ccl_list_iter *ccl_list_push_head(ccl_list *list, void *v)
+{
+	return ccl_list_append(list, v);
+}
+
+void *ccl_list_pop_head(ccl_list *list)
+{
+	ccl_list_iter *it;
+	void *v;
+
+	if (list->head == NULL)
+		return NULL;
+	it = list->head;
+	v = it->value;
+	if (list->head == list->tail) {
+		list->head = list->tail = NULL;
+	} else {
+		list->head = it->next;
+		list->head->prev = NULL;
+	}
+	list->count--;
+	ccl_list_iter_free(it);
+	return v;
+}
+
 int ccl_list_foreach(ccl_list *list, ccl_foreach_cb cb, void *user)
 {
 	ccl_list_iter *it;

@@ -67,9 +67,11 @@ ccl_list_iter *ccl_list_append(ccl_list *list, void *v);
 ccl_list_iter *ccl_list_insert(ccl_list *list, void *v, void **);
 int ccl_list_foreach(ccl_list *list, ccl_foreach_cb cb, void *user);
 int ccl_list_insertion_sort(ccl_list *list);
+ccl_list_iter *ccl_list_push_head(ccl_list *list, void *v);
+void *ccl_list_pop_head(ccl_list *list);
+ccl_list_iter *ccl_list_push_tail(ccl_list *list, void *v);
+void *ccl_list_pop_tail(ccl_list *list);
 ccl_list_iter *ccl_list_find_iter(ccl_list *list, void *v);
-#define ccl_list_push(list,v,vl)	ccl_list_append((list), (v), (vl))
-#define ccl_list_pop(list,v,vl)		ccl_list_prepend((list), (v), (vl))
 
 ccl_list_iter *ccl_list_iter_new(void *v);
 void ccl_list_iter_free(ccl_list_iter *it);
