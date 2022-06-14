@@ -23,6 +23,8 @@
 #ifndef CCL_SP_TREE_H
 #define CCL_SP_TREE_H
 
+#include <stdlib.h>
+
 #include <classic/common.h>
 #include <classic/map.h>
 

@@ -20,7 +20,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>. */
 
-#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
@@ -30,7 +29,7 @@ static ccl_wbnode *ccl_wbnode_alloc(void* k, void *v, unsigned weight)
 {
 	ccl_wbnode *node;
 
-	node = calloc(1, sizeof(*node));
+	node = malloc(sizeof(*node));
 	if (node == NULL)
 		return NULL;
 	node->key = k;
@@ -56,7 +55,7 @@ ccl_wbtree *ccl_wbtree_new(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb 
 
 	if (cmp_cb == NULL)
 		return NULL;
-	tree = calloc(1, sizeof(*tree));
+	tree = malloc(sizeof(*tree));
 	if (tree == NULL)
 		return NULL;
 	tree->cmp = cmp_cb;
@@ -496,7 +495,7 @@ ccl_map *ccl_map_wbtree(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfr
 {
 	ccl_map *map;
 
-	map = calloc(1, sizeof(*map));
+	map = malloc(sizeof(*map));
 	if (map == NULL)
 		return NULL;
 	map->obj = ccl_wbtree_new(cmp_cb, kfree_cb, vfree_cb);

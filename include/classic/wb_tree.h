@@ -23,6 +23,7 @@
 #ifndef CCL_WB_TREE_H
 #define CCL_WB_TREE_H
 
+#include <stdlib.h>
 #include <stdint.h>
 
 #include <classic/common.h>

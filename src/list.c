@@ -18,7 +18,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>. */
 
-#include <stdlib.h>
 #include <string.h>
 
 #include <classic/list.h>
@@ -38,7 +37,7 @@ ccl_list *ccl_list_new(ccl_cmp_cb cmp_cb, ccl_free_cb vfree_cb)
 {
 	ccl_list *list;
 
-	list = calloc(1, sizeof(*list));
+	list = malloc(sizeof(*list));
 	if (list == NULL)
 		return NULL;
 	ccl_list_init(list, cmp_cb, vfree_cb);
@@ -152,7 +151,7 @@ void *ccl_list_pop_tail(ccl_list *list)
 
 ccl_list_iter *ccl_list_push_head(ccl_list *list, void *v)
 {
-	return ccl_list_append(list, v);
+	return ccl_list_prepend(list, v);
 }
 
 void *ccl_list_pop_head(ccl_list *list)
@@ -208,7 +207,7 @@ ccl_list_iter *ccl_list_iter_new(void *v)
 {
 	ccl_list_iter *it;
 
-        it = calloc(1, sizeof(*it));
+        it = malloc(sizeof(*it));
 	if (it == NULL)
 		return NULL;
 	it->prev = NULL;

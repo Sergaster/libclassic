@@ -21,6 +21,7 @@
 #ifndef CCL_MAP_H
 #define CCL_MAP_H
 
+#include <stdlib.h>
 #include <stdbool.h>
 
 #include <classic/common.h>

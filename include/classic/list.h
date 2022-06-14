@@ -21,6 +21,7 @@
 #ifndef CCL_LIST_H
 #define CCL_LIST_H
 
+#include <stdlib.h>
 #include <stdbool.h>
 
 #include <classic/common.h>
@@ -71,7 +72,6 @@ ccl_list_iter *ccl_list_push_head(ccl_list *list, void *v);
 void *ccl_list_pop_head(ccl_list *list);
 ccl_list_iter *ccl_list_push_tail(ccl_list *list, void *v);
 void *ccl_list_pop_tail(ccl_list *list);
-ccl_list_iter *ccl_list_find_iter(ccl_list *list, void *v);
 
 ccl_list_iter *ccl_list_iter_new(void *v);
 void ccl_list_iter_free(ccl_list_iter *it);

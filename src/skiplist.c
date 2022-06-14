@@ -20,7 +20,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>. */
 
-#include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
@@ -58,7 +57,7 @@ ccl_skiplist *ccl_skiplist_new(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free
 		return NULL;
 	if (max_link > MAX_LINK)
 		max_link = MAX_LINK;
-	list = calloc(1, sizeof(*list));
+	list = malloc(sizeof(*list));
 	if (list == NULL)
 		return NULL;
 	list->head = ccl_skipnode_alloc(NULL, max_link);
@@ -300,7 +299,7 @@ ccl_map *ccl_map_skiplist(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb v
 {
 	ccl_map *map;
 
-	map = calloc(1, sizeof(*map));
+	map = malloc(sizeof(*map));
 	if (map == NULL)
 		return NULL;
 	map->obj = ccl_skiplist_new(cmp_cb, kfree_cb, vfree_cb, maxlink_cb, max_link);

@@ -18,8 +18,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>. */
 
-#include <stdlib.h>
-
 #include <classic/map.h>
 
 void ccl_map_free(ccl_map *map)

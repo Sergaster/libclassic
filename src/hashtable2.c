@@ -20,7 +20,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>. */
 
-#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
@@ -37,7 +36,7 @@ ccl_ht2 *ccl_ht2_new(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_
 
 	if (cmp_cb == NULL || hash_cb == NULL)
 		return NULL;
-	ht = calloc(1, sizeof(*ht));
+	ht = malloc(sizeof(*ht));
 	if (ht == NULL)
 		return NULL;
 	ht->size = ccl_ht_prime_geq(size);
@@ -320,7 +319,7 @@ ccl_map *ccl_map_ht2(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_
 {
 	ccl_map *map;
 
-	map = calloc(1, sizeof(*map));
+	map = malloc(sizeof(*map));
 	if (map == NULL)
 		return NULL;
 	map->obj = ccl_ht2_new(cmp_cb, kfree_cb, vfree_cb, hash_cb, size);

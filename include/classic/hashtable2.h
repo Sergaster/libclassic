@@ -23,6 +23,8 @@
 #ifndef CCL_HASHTABLE2_H
 #define CCL_HASHTABLE2_H
 
+#include <stdlib.h>
+
 #include <classic/common.h>
 #include <classic/map.h>
 

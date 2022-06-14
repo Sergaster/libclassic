@@ -21,6 +21,7 @@
 #ifndef CCL_VECTOR_H
 #define CCL_VECTOR_H
 
+#include <stdlib.h>
 #include <stdbool.h>
 
 #include <classic/common.h>
@@ -37,20 +38,20 @@ typedef struct ccl_vector_t {
 } ccl_vector;
 
 ccl_vector *ccl_vector_new(ccl_cmp_cb, ccl_free_cb);
-void ccl_vector_clear(ccl_vector *);
+void ccl_vector_init(ccl_vector *, ccl_cmp_cb, ccl_free_cb);
 void ccl_vector_free(ccl_vector *);
-int ccl_vector_select_range(ccl_vector *, size_t, size_t, void *);
-int ccl_vector_insert_range(ccl_vector *, size_t, size_t, void *);
-int ccl_vector_update_range(ccl_vector *, size_t, size_t, void *);
-int ccl_vector_unlink_range(ccl_vector *, size_t, size_t, void *);
+void ccl_vector_clear(ccl_vector *);
+int ccl_vector_select_range(ccl_vector *, size_t, size_t, void **);
+int ccl_vector_select(ccl_vector *, size_t, void **);
+int ccl_vector_insert_range(ccl_vector *, size_t, size_t, void **);
+int ccl_vector_insert(ccl_vector *, size_t, void *);
+int ccl_vector_update_range(ccl_vector *, size_t, size_t, void **);
+int ccl_vector_update(ccl_vector *, size_t, void *);
+int ccl_vector_unlink_range(ccl_vector *, size_t, size_t, void **);
+int ccl_vector_unlink(ccl_vector *, size_t, void **);
 int ccl_vector_delete_range(ccl_vector *, size_t, size_t);
+int ccl_vector_delete(ccl_vector *, size_t);
 int ccl_vector_foreach(ccl_vector *, ccl_foreach_cb, void *);
 int ccl_vector_sort(ccl_vector *);
-
-#define ccl_vector_select(vec,i,v)	ccl_vector_select_range((vec), (i), 1, (v))
-#define ccl_vector_insert(vec,i,v)	ccl_vector_insert_range((vec), (i), 1, (v))
-#define ccl_vector_update(vec,i,v)	ccl_vector_update_range((vec), (i), 1, (v))
-#define ccl_vector_unlink(vec,i,v)	ccl_vector_unlink_range((vec), (i), 1, (v))
-#define ccl_vector_delete(vec,i,v)	ccl_vector_delete_range((vec), (i), 1)
 
 #endif

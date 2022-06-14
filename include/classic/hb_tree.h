@@ -22,6 +22,7 @@
 #ifndef CCL_HB_TREE_H
 #define CCL_HB_TREE_H
 
+#include <stdlib.h>
 #include <stdbool.h>
 
 #include <classic/common.h>

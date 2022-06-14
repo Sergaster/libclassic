@@ -23,6 +23,7 @@
 #ifndef CCL_TR_TREE_H
 #define CCL_TR_TREE_H
 
+#include <stdlib.h>
 #include <stdint.h>
 
 #include <classic/common.h>
