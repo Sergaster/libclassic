@@ -50,9 +50,13 @@ ccl_vector *ccl_vector_new(ccl_cmp_cb cmp_cb, ccl_free_cb free_cb)
 void ccl_vector_clear(ccl_vector *vec)
 {
 	if (vec->free) {
+		void *v;
 		size_t i;
-		for (i = 0; i < vec->count; i++)
-			vec->free(ccl_vector_ptr(vec, i));
+		for (i = 0; i < vec->count; i++) {
+			v = ccl_vector_ptr(vec, i);
+			if (v != NULL)
+				vec->free(v);
+		}
 	}
 	if (vec->data)
 		free(vec->data);
