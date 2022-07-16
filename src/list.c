@@ -249,6 +249,7 @@ void ccl_list_iter_append(ccl_list *dst, ccl_list_iter *it)
 		dst->head = it;
 	dst->count++;
 	dst->sorted = false;
+	it->list = dst;
 	return;
 }
 

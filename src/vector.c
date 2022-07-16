@@ -49,6 +49,8 @@ ccl_vector *ccl_vector_new(ccl_cmp_cb cmp_cb, ccl_free_cb free_cb)
 
 void ccl_vector_clear(ccl_vector *vec)
 {
+	if (vec->data == NULL)
+		return;
 	if (vec->free) {
 		void *v;
 		size_t i;
@@ -58,8 +60,7 @@ void ccl_vector_clear(ccl_vector *vec)
 				vec->free(v);
 		}
 	}
-	if (vec->data)
-		free(vec->data);
+	free(vec->data);
 	vec->data = NULL;
 	return;
 }
