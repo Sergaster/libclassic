@@ -174,12 +174,12 @@ void *ccl_list_pop_head(ccl_list *list)
 	return v;
 }
 
-int ccl_list_foreach(ccl_list *list, ccl_foreach_cb cb, void *user)
+int ccl_list_foreach(ccl_list *list, ccl_sforeach_cb cb, void *user)
 {
 	ccl_list_iter *it;
 
 	for (it = list->head; it; it = it->next) {
-		if (cb(it->value, NULL, user))
+		if (cb(it->value, user))
 			return -1;
 	}
 	return 0;

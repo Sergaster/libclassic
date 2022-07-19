@@ -23,7 +23,8 @@
 
 typedef void		(* ccl_free_cb)(void *);
 typedef int		(* ccl_cmp_cb)(const void *, const void *);
-typedef int		(* ccl_foreach_cb)(const void *, void *, void *);
+typedef int		(* ccl_sforeach_cb)(void *, void *);
+typedef int		(* ccl_dforeach_cb)(const void *, void *, void *);
 typedef unsigned	(* ccl_hash_cb)(const void *);
 
 #define container_of(ptr, type, member) ((type *)((char *)(__typeof__(((type *)0)->member) *){ ptr } - offsetof(type, member)))

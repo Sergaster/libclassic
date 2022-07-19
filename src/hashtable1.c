@@ -294,7 +294,7 @@ int ccl_ht1_delete(ccl_ht1 *ht, void *key)
         return 0;
 }
 
-int ccl_ht1_foreach(ccl_ht1 *ht, ccl_foreach_cb cb, void *user)
+int ccl_ht1_foreach(ccl_ht1 *ht, ccl_dforeach_cb cb, void *user)
 {
 	ccl_ht1_node *node;
 	int i;

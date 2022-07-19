@@ -57,7 +57,7 @@ int ccl_hbtree_select(ccl_hbtree *tree, void *k, void **v);
 int ccl_hbtree_insert(ccl_hbtree *tree, void *k, void *v, void **);
 int ccl_hbtree_unlink(ccl_hbtree *tree, void *key, void **k, void **v);
 int ccl_hbtree_delete(ccl_hbtree *tree, void *k);
-int ccl_hbtree_foreach(ccl_hbtree *tree, ccl_foreach_cb cb, void *user);
+int ccl_hbtree_foreach(ccl_hbtree *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_hbtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
 

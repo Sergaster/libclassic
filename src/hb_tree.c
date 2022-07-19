@@ -572,7 +572,7 @@ static ccl_hbnode *ccl_hbnode_next(ccl_hbnode *node)
 	return n;
 }
 
-int ccl_hbtree_foreach(ccl_hbtree *tree, ccl_foreach_cb cb, void *user)
+int ccl_hbtree_foreach(ccl_hbtree *tree, ccl_dforeach_cb cb, void *user)
 {
 	ccl_hbnode *node;
 

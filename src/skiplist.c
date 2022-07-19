@@ -275,7 +275,7 @@ int ccl_skiplist_delete(ccl_skiplist *list, void *key)
 	return 0;
 }
 
-int ccl_skiplist_foreach(ccl_skiplist *list, ccl_foreach_cb cb, void *user)
+int ccl_skiplist_foreach(ccl_skiplist *list, ccl_dforeach_cb cb, void *user)
 {
 	ccl_skipnode *node;
 

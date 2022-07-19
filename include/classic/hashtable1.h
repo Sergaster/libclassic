@@ -54,7 +54,7 @@ int ccl_ht1_select(ccl_ht1 *ht, void *k, void **v);
 int ccl_ht1_insert(ccl_ht1 *ht, void *k, void *v, void **);
 int ccl_ht1_unlink(ccl_ht1 *ht, void *key, void **k, void **v);
 int ccl_ht1_delete(ccl_ht1 *ht, void *key);
-int ccl_ht1_foreach(ccl_ht1 *ht, ccl_foreach_cb cb, void *user);
+int ccl_ht1_foreach(ccl_ht1 *ht, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_ht1(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_hash_cb hash_cb, unsigned size);
 

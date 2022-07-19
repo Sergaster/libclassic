@@ -58,7 +58,7 @@ int ccl_wbtree_select(ccl_wbtree *tree, void *k, void **v);
 int ccl_wbtree_insert(ccl_wbtree *tree, void *k, void *v, void **);
 int ccl_wbtree_unlink(ccl_wbtree *tree, void *key, void **k, void **v);
 int ccl_wbtree_delete(ccl_wbtree *tree, void *k);
-int ccl_wbtree_foreach(ccl_wbtree *tree, ccl_foreach_cb cb, void *user);
+int ccl_wbtree_foreach(ccl_wbtree *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_wbtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
 

@@ -51,7 +51,7 @@ int ccl_vector_unlink_range(ccl_vector *, size_t, size_t, void **);
 int ccl_vector_unlink(ccl_vector *, size_t, void **);
 int ccl_vector_delete_range(ccl_vector *, size_t, size_t);
 int ccl_vector_delete(ccl_vector *, size_t);
-int ccl_vector_foreach(ccl_vector *, ccl_foreach_cb, void *);
+int ccl_vector_foreach(ccl_vector *, ccl_sforeach_cb, void *);
 int ccl_vector_sort(ccl_vector *);
 
 #endif

@@ -339,7 +339,7 @@ static ccl_trnode *ccl_trnode_next(ccl_trnode *node)
 	return n;
 }
 
-int ccl_trtree_foreach(ccl_trtree *tree, ccl_foreach_cb cb, void *user)
+int ccl_trtree_foreach(ccl_trtree *tree, ccl_dforeach_cb cb, void *user)
 {
 	ccl_trnode *node;
 

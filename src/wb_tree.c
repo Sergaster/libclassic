@@ -466,7 +466,7 @@ static ccl_wbnode *ccl_wbnode_next(ccl_wbnode *node)
 	return n;
 }
 
-int ccl_wbtree_foreach(ccl_wbtree *tree, ccl_foreach_cb cb, void *user)
+int ccl_wbtree_foreach(ccl_wbtree *tree, ccl_dforeach_cb cb, void *user)
 {
 	ccl_wbnode *node;
 

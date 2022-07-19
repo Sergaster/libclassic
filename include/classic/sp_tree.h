@@ -56,7 +56,7 @@ int ccl_sptree_select(ccl_sptree *tree, void *k, void **v);
 int ccl_sptree_insert(ccl_sptree *tree, void *k, void *v, void **);
 int ccl_sptree_unlink(ccl_sptree *tree, void *key, void **k, void **v);
 int ccl_sptree_delete(ccl_sptree *tree, void *k);
-int ccl_sptree_foreach(ccl_sptree *tree, ccl_foreach_cb cb, void *user);
+int ccl_sptree_foreach(ccl_sptree *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_sptree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
 

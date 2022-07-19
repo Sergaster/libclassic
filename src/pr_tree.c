@@ -477,7 +477,7 @@ static ccl_prnode *ccl_prnode_next(ccl_prnode *node)
 	return n;
 }
 
-int ccl_prtree_foreach(ccl_prtree *tree, ccl_foreach_cb cb, void *user)
+int ccl_prtree_foreach(ccl_prtree *tree, ccl_dforeach_cb cb, void *user)
 {
 	ccl_prnode *node;
 

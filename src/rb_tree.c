@@ -522,7 +522,7 @@ int ccl_rbtree_delete(ccl_rbtree *tree, void *key)
 	return 0;
 }
 
-int ccl_rbtree_foreach(ccl_rbtree *tree, ccl_foreach_cb cb, void *user) 
+int ccl_rbtree_foreach(ccl_rbtree *tree, ccl_dforeach_cb cb, void *user) 
 {
 	ccl_rbnode *node;
 

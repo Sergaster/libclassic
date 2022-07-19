@@ -410,7 +410,7 @@ static ccl_spnode *ccl_spnode_next(ccl_spnode *node)
 	return n;
 }
 
-int ccl_sptree_foreach(ccl_sptree *tree, ccl_foreach_cb cb, void *user)
+int ccl_sptree_foreach(ccl_sptree *tree, ccl_dforeach_cb cb, void *user)
 {
 	ccl_spnode *node;
 

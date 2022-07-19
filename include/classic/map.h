@@ -31,7 +31,7 @@ typedef size_t		(* ccl_map_clear_cb)(void *obj);
 typedef int		(* ccl_map_select_cb)(void *obj, const void *k, void **v);
 typedef int		(* ccl_map_insert_cb)(void *obj, const void *k, void *v, void **pv);
 typedef int		(* ccl_map_delete_cb)(void *obj, const void *k);
-typedef int		(* ccl_map_foreach_cb)(void *obj, ccl_foreach_cb cb, void *user);
+typedef int		(* ccl_map_foreach_cb)(void *obj, ccl_dforeach_cb cb, void *user);
 
 struct ccl_map_ops {
 	ccl_map_free_cb	free;
