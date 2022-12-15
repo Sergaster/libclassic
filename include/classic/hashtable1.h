@@ -28,6 +28,10 @@
 #include <classic/common.h>
 #include <classic/map.h>
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 struct ccl_ht1_t;
 
 typedef struct ccl_ht1_node_t {
@@ -57,5 +61,9 @@ int ccl_ht1_delete(ccl_ht1 *ht, void *key);
 int ccl_ht1_foreach(ccl_ht1 *ht, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_ht1(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_hash_cb hash_cb, unsigned size);
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif

@@ -29,6 +29,10 @@
 #include <classic/common.h>
 #include <classic/map.h>
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 typedef struct ccl_trnode_t {
 	void *key;
 	void *value;
@@ -64,5 +68,9 @@ int ccl_trtree_delete(ccl_trtree *tree, void *k);
 int ccl_trtree_foreach(ccl_trtree *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_trtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb, ccl_prio_cb);
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif

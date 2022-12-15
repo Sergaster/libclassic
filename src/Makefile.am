@@ -30,3 +30,5 @@ COBJECTS = map.c list.c vector.c \
 	skiplist.c
 
 libclassic_la_SOURCES = $(COBJECTS)
+
+libclassic_la_LDFLAGS = -export-symbols-regex '^(ccl_).*'

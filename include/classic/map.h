@@ -26,6 +26,10 @@
 
 #include <classic/common.h>
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 typedef void		(* ccl_map_free_cb)(void *obj);
 typedef size_t		(* ccl_map_clear_cb)(void *obj);
 typedef int		(* ccl_map_select_cb)(void *obj, const void *k, void **v);
@@ -56,5 +60,9 @@ void ccl_map_free(ccl_map *map);
 #define ccl_map_delete(map,k)		(map)->ops->delete((map)->obj, (k))
 #define ccl_map_foreach(map,cb,u)	(map)->ops->foreach((map)->obj, (cb), (u))
 #define ccl_map_sorted(map)		(map)->sorted
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif

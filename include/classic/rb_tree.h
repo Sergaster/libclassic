@@ -28,6 +28,10 @@
 #include <classic/common.h>
 #include <classic/map.h>
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 typedef struct ccl_rbnode_t {
 	void *key;
 	void *value;
@@ -60,5 +64,9 @@ int ccl_rbtree_delete(ccl_rbtree *tree, void *k);
 int ccl_rbtree_foreach(ccl_rbtree *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_rbtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif

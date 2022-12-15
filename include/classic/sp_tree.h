@@ -28,6 +28,10 @@
 #include <classic/common.h>
 #include <classic/map.h>
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 typedef struct ccl_spnode_t {
 	void *key;
 	void *value;
@@ -59,5 +63,9 @@ int ccl_sptree_delete(ccl_sptree *tree, void *k);
 int ccl_sptree_foreach(ccl_sptree *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_sptree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif

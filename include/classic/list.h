@@ -26,58 +26,41 @@
 
 #include <classic/common.h>
 
-struct ccl_list_t;
+#ifdef  __cplusplus
+extern "C" {
+#endif
 
-typedef struct ccl_list_iter_t {
-	void *value;
-	struct ccl_list_iter_t *prev;
-	struct ccl_list_iter_t *next;
-	struct ccl_list_t *list;
-} ccl_list_iter;
+typedef void ccl_list;
+typedef void ccl_list_iter;
 
-typedef struct ccl_list_t {
-	struct ccl_list_iter_t *head;
-	struct ccl_list_iter_t *tail;
-	ccl_free_cb vfree;
-	ccl_cmp_cb cmp;
-	size_t count;
-	bool sorted;
-} ccl_list;
+ccl_list *ccl_list_new(ccl_cmp_cb, ccl_free_cb);
+void ccl_list_free(ccl_list *);
+void ccl_list_init(ccl_list *, ccl_cmp_cb, ccl_free_cb);
+void ccl_list_clear(ccl_list *);
+bool ccl_list_foreach(ccl_list *, ccl_sforeach_cb, void *);
+bool ccl_list_push_head(ccl_list *l, void *);
+void *ccl_list_pop_head(ccl_list *);
+bool ccl_list_push_tail(ccl_list *l, void *);
+void *ccl_list_pop_tail(ccl_list *);
+bool ccl_list_sort(ccl_list *);
+size_t ccl_list_count(ccl_list *);
 
-#define ccl_list_foreach_next(list, it, pos) \
-	for (it = list->head; it && (pos = it->value, 1); it = it->next)
-/* Safe when calling ccl_list_iter_delete() while iterating over the list. */
-#define ccl_list_foreach_safe(list, it, tmp, pos) \
-	if (list) \
-		for (it = list->head; it && (pos = it->data, tmp = it->next, 1); it = tmp)
-#define ccl_list_foreach_prev(list, it, pos) \
-	if (list) \
-		for (it = list->tail; it && (pos = it->data, 1); it = it->prev)
-#define ccl_list_foreach_prev_safe(list, it, tmp, pos) \
-	for (it = list->tail; it && (pos = it->data, tmp = it->prev, 1); it = tmp)
+ccl_list_iter *ccl_list_iter_new(ccl_list *);
+void ccl_list_iter_free(ccl_list_iter *);
+void ccl_list_iter_unlink(ccl_list_iter *);
+void ccl_list_iter_delete(ccl_list_iter *);
+bool ccl_list_iter_insert(ccl_list_iter *, void *);
+bool ccl_list_iter_value(ccl_list_iter *, void **);
+void ccl_list_iter_begin(ccl_list_iter *);
+void ccl_list_iter_end(ccl_list_iter *);
+bool ccl_list_iter_prev(ccl_list_iter *);
+bool ccl_list_iter_prevn(ccl_list_iter *, size_t);
+bool ccl_list_iter_next(ccl_list_iter *);
+bool ccl_list_iter_nextn(ccl_list_iter *, size_t);
+int ccl_list_iter_cmp(void *, ccl_list_iter *);
 
-#define ccl_list_iter_next(it)		(it)->next
-#define ccl_list_iter_prev(it)		(it)->prev
-
-ccl_list *ccl_list_new(ccl_cmp_cb cmp_cb, ccl_free_cb vfree_cb);
-void ccl_list_free(ccl_list *list);
-void ccl_list_init(ccl_list *list, ccl_cmp_cb cmp_cb, ccl_free_cb vfree_cb);
-void ccl_list_clear(ccl_list *list);
-ccl_list_iter *ccl_list_prepend(ccl_list *list, void *v);
-ccl_list_iter *ccl_list_append(ccl_list *list, void *v);
-ccl_list_iter *ccl_list_insert(ccl_list *list, void *v, void **);
-int ccl_list_foreach(ccl_list *list, ccl_sforeach_cb cb, void *user);
-int ccl_list_insertion_sort(ccl_list *list);
-ccl_list_iter *ccl_list_push_head(ccl_list *list, void *v);
-void *ccl_list_pop_head(ccl_list *list);
-ccl_list_iter *ccl_list_push_tail(ccl_list *list, void *v);
-void *ccl_list_pop_tail(ccl_list *list);
-
-ccl_list_iter *ccl_list_iter_new(void *v);
-void ccl_list_iter_free(ccl_list_iter *it);
-void ccl_list_iter_prepend(ccl_list *dst, ccl_list_iter *it);
-void ccl_list_iter_append(ccl_list *dst, ccl_list_iter *it);
-void ccl_list_iter_insert(ccl_list *dst, ccl_list_iter *it);
-void ccl_list_iter_unlink(ccl_list_iter *it);
+#ifdef  __cplusplus
+}
+#endif
 
 #endif

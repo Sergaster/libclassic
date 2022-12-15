@@ -20,7 +20,54 @@
 
 #include <string.h>
 
-#include <classic/list.h>
+#include "list.h"
+
+static ccl_list_node *_ccl_list_node_new(void *v)
+{
+	ccl_list_node *node;
+
+        node = malloc(sizeof(*node));
+	if (node == NULL)
+		return NULL;
+	node->prev = NULL;
+	node->next = NULL;
+	node->value = v;
+	return node;
+}
+
+static void _ccl_list_node_free(ccl_list_node *node)
+{       
+	free(node);
+	return;
+}
+
+static void _ccl_list_node_prepend(ccl_list *list, ccl_list_node *node)
+{
+	if (list->head)
+		list->head->prev = node;
+	node->next = list->head;
+	node->prev = NULL;
+	list->head = node;
+	if (list->tail == NULL)
+		list->tail = node;
+	list->count++;
+	list->sorted = false;
+	return;
+}
+
+static void _ccl_list_node_append(ccl_list *list, ccl_list_node *node)
+{
+	if (list->tail)
+		list->tail->next = node;
+	node->prev = list->tail;
+	node->next = NULL;
+	list->tail = node;
+	if (list->head == NULL)
+		list->head = node;
+	list->count++;
+	list->sorted = false;
+	return;
+}
 
 void ccl_list_init(ccl_list *list, ccl_cmp_cb cmp_cb, ccl_free_cb vfree_cb)
 {
@@ -46,15 +93,15 @@ ccl_list *ccl_list_new(ccl_cmp_cb cmp_cb, ccl_free_cb vfree_cb)
 
 void ccl_list_clear(ccl_list *list)
 {
-	ccl_list_iter *it, *next;
+	ccl_list_node *node, *next;
 
-	it = list->head;
-	while (it) {
-		next = it->next;
-		if (it->value != NULL && list->vfree)
-			list->vfree(it->value);
-		ccl_list_iter_free(it);
-		it = next;
+	node = list->head;
+	while (node) {
+		next = node->next;
+		if (node->value != NULL && list->vfree)
+			list->vfree(node->value);
+		_ccl_list_node_free(node);
+		node = next;
 	}
 	list->head = list->tail = NULL;
 	list->count = 0;
@@ -68,242 +115,271 @@ void ccl_list_free(ccl_list *list)
 	return;
 }
 
-ccl_list_iter *ccl_list_prepend(ccl_list *list, void *v)
+bool ccl_list_prepend(ccl_list *list, void *v)
 {       
-	ccl_list_iter *it;
+	ccl_list_node *node;
         
-	it = ccl_list_iter_new(v);
-	if (it == NULL)
-		return NULL;
-	ccl_list_iter_prepend(list, it);
-	return it;
+	node = _ccl_list_node_new(v);
+	if (node == NULL)
+		return false;
+	_ccl_list_node_prepend(list, node);
+	return true;
 }
 
-ccl_list_iter *ccl_list_append(ccl_list *list, void *v)
+bool ccl_list_append(ccl_list *list, void *v)
 {
-	ccl_list_iter *it;
+	ccl_list_node *node;
 
-	it = ccl_list_iter_new(v);
-	if (it == NULL)
-		return NULL;
-	ccl_list_iter_append(list, it);
-	return it;
+	node = _ccl_list_node_new(v);
+	if (node == NULL)
+		return false;
+	_ccl_list_node_append(list, node);
+	return true;
 }
 
-ccl_list_iter *ccl_list_insert(ccl_list *list, void *v, void **pv)
-{
-	ccl_list_iter *it;
-
-	it = ccl_list_iter_new(v);
-	if (it == NULL)
-		return NULL;
-	*pv = &it->value;
-	ccl_list_iter_insert(list, it);
-	return it;
-}
-
-int ccl_list_insertion_sort(ccl_list *list)
-{
-	ccl_list_iter *it, *it2;
-	void *v;
-
-	if (list->cmp == NULL)
-		return -1;
-	if (list->sorted)
-		return 0;
-	for (it = list->head; it && it->value; it = it->next) {
-		for (it2 = it->next; it2 && it2->value; it2 = it2->next) {
-			if (list->cmp(it->value, it2->value) <= 0)
-				continue;
-			v = it->value;
-			it->value = it2->value;
-			it2->value = v;
-		}
-	}
-	list->sorted = true;
-	return 0;
-}
-
-ccl_list_iter *ccl_list_push_tail(ccl_list *list, void *v)
+bool ccl_list_push_tail(ccl_list *list, void *v)
 {
 	return ccl_list_append(list, v);
 }
 
 void *ccl_list_pop_tail(ccl_list *list)
 {
-	ccl_list_iter *it;
+	ccl_list_node *node;
 	void *v;
 
 	if (list->tail == NULL)
 		return NULL;
-	it = list->tail;
-	v = it->value;
+	node = list->tail;
+	v = node->value;
 	if (list->head == list->tail) {
 		list->head = list->tail = NULL;
 	} else {
-		list->tail = it->prev;
+		list->tail = node->prev;
 		list->tail->next = NULL;
 	}
 	list->count--;
-	ccl_list_iter_free(it);
+	_ccl_list_node_free(node);
 	return v;
 }
 
-ccl_list_iter *ccl_list_push_head(ccl_list *list, void *v)
+bool ccl_list_push_head(ccl_list *list, void *v)
 {
 	return ccl_list_prepend(list, v);
 }
 
 void *ccl_list_pop_head(ccl_list *list)
 {
-	ccl_list_iter *it;
+	ccl_list_node *node;
 	void *v;
 
 	if (list->head == NULL)
 		return NULL;
-	it = list->head;
-	v = it->value;
+	node = list->head;
+	v = node->value;
 	if (list->head == list->tail) {
 		list->head = list->tail = NULL;
 	} else {
-		list->head = it->next;
+		list->head = node->next;
 		list->head->prev = NULL;
 	}
 	list->count--;
-	ccl_list_iter_free(it);
+	_ccl_list_node_free(node);
 	return v;
 }
 
-int ccl_list_foreach(ccl_list *list, ccl_sforeach_cb cb, void *user)
+bool ccl_list_foreach(ccl_list *list, ccl_sforeach_cb cb, void *user)
 {
-	ccl_list_iter *it;
+	ccl_list_node *node;
 
-	for (it = list->head; it; it = it->next) {
-		if (cb(it->value, user))
-			return -1;
+	for (node = list->head; node; node = node->next) {
+		if (cb(node->value, user))
+			return false;
 	}
-	return 0;
+	return true;
 }
 
-ccl_list_iter *ccl_list_search_iter(ccl_list *list, void *key)
+bool ccl_list_sort(ccl_list *list)
 {
-	ccl_list_iter *it;
-	void *q;
-	int ret;
+	ccl_list_node *node, *node2;
+	void *v;
 
 	if (list->cmp == NULL)
-		return NULL;
-	ccl_list_foreach_next(list, it, q) {
-		ret = list->cmp(key, q);
-		if (ret == 0)
-			return it;
-		else if (ret > 0 && list->sorted)
-			return NULL;
+		return false;
+	if (list->sorted)
+		return true;
+	for (node = list->head; node && node->value; node = node->next) {
+		for (node2 = node->next; node2 && node2->value; node2 = node2->next) {
+			if (list->cmp(node->value, node2->value) <= 0)
+				continue;
+			v = node->value;
+			node->value = node2->value;
+			node2->value = v;
+		}
 	}
-	return NULL;
+	list->sorted = true;
+	return true;
 }
 
-ccl_list_iter *ccl_list_iter_new(void *v)
+size_t ccl_list_count(ccl_list *list)
+{
+	return list->count;
+}
+
+ccl_list_iter *ccl_list_iter_new(ccl_list *list)
 {
 	ccl_list_iter *it;
 
-        it = malloc(sizeof(*it));
+	it = malloc(sizeof(*it));
 	if (it == NULL)
 		return NULL;
-	it->prev = NULL;
-	it->next = NULL;
-	it->value = v;
-	it->list = NULL;
+	it->node = list->head;
+	it->list = list;
 	return it;
 }
 
 void ccl_list_iter_free(ccl_list_iter *it)
-{       
+{
 	free(it);
 	return;
 }
 
-void ccl_list_iter_prepend(ccl_list *dst, ccl_list_iter *it)
+void ccl_list_iter_begin(ccl_list_iter *it)
 {
-	if (dst->head)
-		dst->head->prev = it;
-	it->next = dst->head;
-	it->prev = NULL;
-	dst->head = it;
-	if (dst->tail == NULL)
-		dst->tail = it;
-	dst->count++;
-	dst->sorted = false;
-	it->list = dst;
+	it->node = it->list->head;
 	return;
 }
 
-void ccl_list_iter_append(ccl_list *dst, ccl_list_iter *it)
+void ccl_list_iter_end(ccl_list_iter *it)
 {
-	if (dst->tail)
-		dst->tail->next = it;
-	it->prev = dst->tail;
-	it->next = NULL;
-	dst->tail = it;
-	if (dst->head == NULL)
-		dst->head = it;
-	dst->count++;
-	dst->sorted = false;
-	it->list = dst;
+	it->node = it->list->tail;
 	return;
 }
 
-void ccl_list_iter_insert(ccl_list *dst, ccl_list_iter *it)
+bool ccl_list_iter_value(ccl_list_iter *it, void **v)
 {
-	       
-	ccl_list_iter *it2;
+	if (it->node == NULL)
+		return false;
+	*v = it->node->value;
+	return true;
+}
 
-	if (dst->cmp == NULL || !dst->sorted) {
-		ccl_list_iter_prepend(dst, it);
-		return;
+bool ccl_list_iter_prevn(ccl_list_iter *it, size_t n)
+{
+	ccl_list_node *node = it->node;
+	size_t i;
+
+	for (i = 0; i < n; i++) {
+		if (node == NULL)
+			return false;
+		node = node->prev;
 	}
+	it->node = node;
+	return true;
+}
 
-	if (dst->head == NULL) {
-		dst->head = it;
-		dst->tail = it;
+bool ccl_list_iter_prev(ccl_list_iter *it)
+{
+	if (it->node == NULL || it->node->prev == NULL)
+		return false;
+	it->node = it->node->prev;
+	return true;
+}
+
+bool ccl_list_iter_nextn(ccl_list_iter *it, size_t n)
+{
+	ccl_list_node *node = it->node;
+	size_t i;
+
+	for (i = 0; i < n; i++) {
+		if (node == NULL)
+			return false;
+		node = node->next;
+	}
+	it->node = node;
+	return true;
+}
+
+bool ccl_list_iter_next(ccl_list_iter *it)
+{
+	if (it->node == NULL || it->node->next == NULL)
+		return false;
+	it->node = it->node->next;
+	return true;
+}
+
+void *ccl_list_iter_unlink(ccl_list_iter *it)
+{
+	ccl_list *list = it->list;
+	ccl_list_node *node = it->node;
+
+	if (list->head == node)
+		list->head = node->next;
+	if (list->tail == node)
+		list->tail = node->prev;
+	if (node->prev)
+		node->prev->next = node->next;
+	if (node->next)
+		node->next->prev = node->prev;
+	list->count--;
+	node->next = node->prev = NULL;
+	return node->value;
+}
+
+void ccl_list_iter_delete(ccl_list_iter *it)
+{
+	ccl_list *list = it->list;
+	ccl_list_node *node = it->node;
+	void *v;
+
+	if (node == NULL)
+		return;
+	v = ccl_list_iter_unlink(it);
+	if (list->vfree)
+		list->vfree(v);
+	ccl_list_iter_free(it);
+	return;
+}
+
+bool ccl_list_iter_insert(ccl_list_iter *it, void *v)
+{
+	ccl_list *list = it->list;
+	ccl_list_node *node, *node2;
+
+	node = _ccl_list_node_new(v);
+	if (node == NULL)
+		return false;
+
+	if (list->head == NULL) {
+		list->head = node;
+		list->tail = node;
 		goto out;
 	}
 
-	it2 = dst->head;
-	while (it2->next != NULL) {
-		if (dst->cmp(it->value, it2->value) >= 0)
-			break;
-		it2 = it2->next;
-	}
+	node2 = it->node;
+	if (node2 == NULL) {
+		ccl_list_node *tail = list->tail;
 
-	it->prev = it2;
-	if (it2->next) {
-		it->next = it2->next;
-		it2->next->prev = it;
+		tail->next = node;
+		node->prev = tail;
+		list->tail = node;
 	} else {
-		dst->tail = it;
+		if (node2->prev == NULL)
+			list->head = node;
+		node->prev = node2->prev;
+		node->next = node2;
+		node2->prev = node;
 	}
-	it2->next = it;
 out:
-	dst->count++;
-	it->list = dst;
-	return;
+	list->count++;
+	list->sorted = false;
+	return true;
 }
 
-void ccl_list_iter_unlink(ccl_list_iter *it)
+int ccl_list_iter_cmp(void *v, ccl_list_iter *it)
 {
 	ccl_list *list = it->list;
 
-	if (list->head == it)
-		list->head = it->next;
-	if (list->tail == it)
-		list->tail = it->prev;
-	if (it->prev)
-		it->prev->next = it->next;
-	if (it->next)
-		it->next->prev = it->prev;
-	list->count--;
-	it->next = it->prev = NULL;
-	it->list = NULL;
-	return;
+	if (it->node == NULL)
+		return -1;
+	return list->cmp(v, it->node->value);
 }

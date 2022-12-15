@@ -29,6 +29,10 @@
 #include <classic/common.h>
 #include <classic/map.h>
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 typedef struct ccl_wbnode_t {
 	void *key;
 	void *value;
@@ -61,5 +65,9 @@ int ccl_wbtree_delete(ccl_wbtree *tree, void *k);
 int ccl_wbtree_foreach(ccl_wbtree *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_wbtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif

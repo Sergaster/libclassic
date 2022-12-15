@@ -26,32 +26,51 @@
 
 #include <classic/common.h>
 
-struct ccl_vector_t;
+#ifdef  __cplusplus
+extern "C" {
+#endif
 
-typedef struct ccl_vector_t {
-	void **data;
-	ccl_cmp_cb cmp;
-	ccl_free_cb free;
-	size_t count;
-	size_t capacity;
-	bool sorted;
-} ccl_vector;
+typedef void ccl_vector;
+typedef void ccl_vector_iter;
 
 ccl_vector *ccl_vector_new(ccl_cmp_cb, ccl_free_cb);
 void ccl_vector_init(ccl_vector *, ccl_cmp_cb, ccl_free_cb);
 void ccl_vector_free(ccl_vector *);
 void ccl_vector_clear(ccl_vector *);
-int ccl_vector_select_range(ccl_vector *, size_t, size_t, void **);
-int ccl_vector_select(ccl_vector *, size_t, void **);
-int ccl_vector_insert_range(ccl_vector *, size_t, size_t, void **);
-int ccl_vector_insert(ccl_vector *, size_t, void *);
-int ccl_vector_update_range(ccl_vector *, size_t, size_t, void **);
-int ccl_vector_update(ccl_vector *, size_t, void *);
-int ccl_vector_unlink_range(ccl_vector *, size_t, size_t, void **);
-int ccl_vector_unlink(ccl_vector *, size_t, void **);
-int ccl_vector_delete_range(ccl_vector *, size_t, size_t);
-int ccl_vector_delete(ccl_vector *, size_t);
-int ccl_vector_foreach(ccl_vector *, ccl_sforeach_cb, void *);
-int ccl_vector_sort(ccl_vector *);
+bool ccl_vector_selectn(ccl_vector *, size_t, size_t, void **);
+bool ccl_vector_select(ccl_vector *, size_t, void **);
+bool ccl_vector_insertn(ccl_vector *, size_t, size_t, void **);
+bool ccl_vector_insert(ccl_vector *, size_t, void *);
+bool ccl_vector_updaten(ccl_vector *, size_t, size_t, void **);
+bool ccl_vector_update(ccl_vector *, size_t, void *);
+bool ccl_vector_unlinkn(ccl_vector *, size_t, size_t, void **);
+bool ccl_vector_unlink(ccl_vector *, size_t, void **);
+bool ccl_vector_deleten(ccl_vector *, size_t, size_t);
+bool ccl_vector_delete(ccl_vector *, size_t);
+bool ccl_vector_foreach(ccl_vector *, ccl_sforeach_cb, void *);
+bool ccl_vector_sort(ccl_vector *);
+size_t ccl_vector_count(ccl_vector *);
+bool ccl_vector_sorted(ccl_vector *);
+
+ccl_vector_iter *ccl_vector_iter_new(ccl_vector *);
+void ccl_vector_iter_free(ccl_vector_iter *);
+void ccl_vector_iter_begin(ccl_vector_iter *);
+void ccl_vector_iter_end(ccl_vector_iter *);
+bool ccl_vector_iter_value(ccl_vector_iter *, void **);
+bool ccl_vector_iter_prev(ccl_vector_iter *);
+bool ccl_vector_iter_prevn(ccl_vector_iter *, size_t);
+bool ccl_vector_iter_next(ccl_vector_iter *);
+bool ccl_vector_iter_nextn(ccl_vector_iter *, size_t);
+bool ccl_vector_iter_unlink(ccl_vector_iter *, void **);
+bool ccl_vector_iter_unlinkn(ccl_vector_iter *, size_t, void **);
+bool ccl_vector_iter_delete(ccl_vector_iter *);
+bool ccl_vector_iter_deleten(ccl_vector_iter *, size_t);
+bool ccl_vector_iter_insert(ccl_vector_iter *, void *);
+bool ccl_vector_iter_insertn(ccl_vector_iter *, size_t, void **);
+int ccl_vector_iter_cmp(void *, ccl_vector_iter *);
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif

@@ -28,6 +28,10 @@
 #include <classic/common.h>
 #include <classic/map.h>
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 typedef struct ccl_skipnode_t {
 	void *key;
 	void *value;
@@ -68,5 +72,9 @@ int ccl_skiplist_delete(ccl_skiplist *tree, void *k);
 int ccl_skiplist_foreach(ccl_skiplist *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_skiplist(ccl_cmp_cb, ccl_free_cb, ccl_free_cb, ccl_maxlink_cb, unsigned);
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif

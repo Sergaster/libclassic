@@ -20,4 +20,4 @@ AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = include src
 
-ACLOCAL_AMFLAGS = -I m4 -Wall
+ACLOCAL_AMFLAGS = -I m4 -Wall -Wextra
