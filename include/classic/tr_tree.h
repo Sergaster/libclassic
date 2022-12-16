@@ -61,11 +61,11 @@ typedef struct ccl_trtree_iter_t {
 ccl_trtree *ccl_trtree_new(ccl_cmp_cb, ccl_free_cb, ccl_free_cb, ccl_prio_cb);
 size_t ccl_trtree_clear(ccl_trtree *tree);
 void ccl_trtree_free(ccl_trtree *tree);
-int ccl_trtree_select(ccl_trtree *tree, void *k, void **v);
-int ccl_trtree_insert(ccl_trtree *tree, void *k, void *v, void **);
-int ccl_trtree_unlink(ccl_trtree *tree, void *key, void **k, void **v);
-int ccl_trtree_delete(ccl_trtree *tree, void *k);
-int ccl_trtree_foreach(ccl_trtree *tree, ccl_dforeach_cb cb, void *user);
+bool ccl_trtree_select(ccl_trtree *tree, void *k, void **v);
+bool ccl_trtree_insert(ccl_trtree *tree, void *k, void *v, void **);
+bool ccl_trtree_unlink(ccl_trtree *tree, void *key, void **k, void **v);
+bool ccl_trtree_delete(ccl_trtree *tree, void *k);
+bool ccl_trtree_foreach(ccl_trtree *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_trtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb, ccl_prio_cb);
 

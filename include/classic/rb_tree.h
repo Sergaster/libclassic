@@ -57,11 +57,11 @@ typedef struct ccl_rbtree_iter_t {
 ccl_rbtree *ccl_rbtree_new(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
 size_t ccl_rbtree_clear(ccl_rbtree *tree);
 void ccl_rbtree_free(ccl_rbtree *tree);
-int ccl_rbtree_select(ccl_rbtree *tree, void *k, void **v);
-int ccl_rbtree_insert(ccl_rbtree *tree, void *k, void *v, void **);
-int ccl_rbtree_unlink(ccl_rbtree *tree, void *key, void **k, void **v);
-int ccl_rbtree_delete(ccl_rbtree *tree, void *k);
-int ccl_rbtree_foreach(ccl_rbtree *tree, ccl_dforeach_cb cb, void *user);
+bool ccl_rbtree_select(ccl_rbtree *tree, void *k, void **v);
+bool ccl_rbtree_insert(ccl_rbtree *tree, void *k, void *v, void **);
+bool ccl_rbtree_unlink(ccl_rbtree *tree, void *key, void **k, void **v);
+bool ccl_rbtree_delete(ccl_rbtree *tree, void *k);
+bool ccl_rbtree_foreach(ccl_rbtree *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_rbtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
 

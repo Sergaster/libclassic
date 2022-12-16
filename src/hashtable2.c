@@ -105,15 +105,15 @@ static ccl_ht2_node *ccl_ht2_search_node(ccl_ht2 *ht, void *k)
 	return NULL;
 }
 
-int ccl_ht2_select(ccl_ht2 *ht, void *k, void **v)
+bool ccl_ht2_select(ccl_ht2 *ht, void *k, void **v)
 {
 	ccl_ht2_node *node;
 
 	node = ccl_ht2_search_node(ht, k);
 	if (node == NULL)
-		return -1;
+		return false;
 	*v = node->value;
-	return 0;
+	return true;
 }
 
 static void ccl_ht2_transform(ccl_ht2 *ht, unsigned nsize)
@@ -166,14 +166,14 @@ static void ccl_ht2_transform(ccl_ht2 *ht, unsigned nsize)
 #define LOADFACTOR_NUMERATOR    2
 #define LOADFACTOR_DENOMINATOR  3
 
-int ccl_ht2_insert(ccl_ht2 *ht, void *k, void *v, void **pv)
+bool ccl_ht2_insert(ccl_ht2 *ht, void *k, void *v, void **pv)
 {
 	ccl_ht2_node *node;
 	unsigned hn, i, hash;
 
 	*pv = NULL;
 	if (k == NULL)
-		return -1;
+		return false;
 	if (LOADFACTOR_DENOMINATOR * ht->count >= LOADFACTOR_NUMERATOR * ht->size)
 		ccl_ht2_transform(ht, ht->size + 1);
 
@@ -189,19 +189,19 @@ int ccl_ht2_insert(ccl_ht2 *ht, void *k, void *v, void **pv)
 			node->hash = hash;
 			ht->count++;
 			*pv = &node->value;
-			return 0;
+			return true;
 		}
 
 		if (node->hash == hash && !ht->cmp(k, node->key)) {
 			*pv = &node->value;
-			return -1;
+			return false;
 		}
 		i++;
 		if (i == ht->size)
 			i = 0;
 	} while (i != hn);
 
-	return -1;
+	return false;
 }
 
 static void ccl_ht2_update_table(ccl_ht2 *ht, unsigned start, unsigned end)
@@ -243,13 +243,13 @@ static void ccl_ht2_update_table(ccl_ht2 *ht, unsigned start, unsigned end)
 	return;
 }
 
-int ccl_ht2_unlink(ccl_ht2 *ht, void *key, void **k, void **v)
+bool ccl_ht2_unlink(ccl_ht2 *ht, void *key, void **k, void **v)
 {
 	ccl_ht2_node *node;
 	unsigned hn, i, hash;
 
 	if (key == NULL)
-		return -1;
+		return false;
 	hash = ht->hash(key);
 	hn = hash % ht->size;
 
@@ -258,7 +258,7 @@ int ccl_ht2_unlink(ccl_ht2 *ht, void *key, void **k, void **v)
 	do {
 		node = ccl_ht2_ptr(ht, i);
 		if (node->key == NULL)
-			return -1;
+			return false;
 		if (node->hash == hash && !ht->cmp(key, node->key)) {
 			*k = node->key;
 			*v = node->value;
@@ -268,30 +268,30 @@ int ccl_ht2_unlink(ccl_ht2 *ht, void *key, void **k, void **v)
 			if (i == ht->size)
 				i = 0;
 			ccl_ht2_update_table(ht, i, hn);
-			return 0;
+			return true;
 		}
 		i++;
 		if (i == ht->size)
 			i = 0;
 	} while (i != hn);
 
-	return -1;
+	return false;
 }
 
-int ccl_ht2_delete(ccl_ht2 *ht, void *key)
+bool ccl_ht2_delete(ccl_ht2 *ht, void *key)
 {
 	void *k, *v;
 
-	if (ccl_ht2_unlink(ht, key, &k, &v))
-		return -1;
+	if (!ccl_ht2_unlink(ht, key, &k, &v))
+		return false;
 	if (ht->kfree != NULL)
 		ht->kfree(k);
 	if (v != NULL && ht->vfree != NULL)
 		ht->vfree(v);
-        return 0;
+        return true;
 }
 
-int ccl_ht2_foreach(ccl_ht2 *ht, ccl_dforeach_cb cb, void *user)
+bool ccl_ht2_foreach(ccl_ht2 *ht, ccl_dforeach_cb cb, void *user)
 {               
         ccl_ht2_node *node;
 	int i;
@@ -300,10 +300,10 @@ int ccl_ht2_foreach(ccl_ht2 *ht, ccl_dforeach_cb cb, void *user)
 		node = ccl_ht2_ptr(ht, i);
 		if (node->key == NULL)
 			continue;
-		if (cb(node->key, node->value, user))
-			return -1;
+		if (!cb(node->key, node->value, user))
+			return false;
 	}
-	return 0;
+	return true;
 }
 
 static struct ccl_map_ops map_ops = {

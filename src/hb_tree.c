@@ -136,15 +136,15 @@ static ccl_hbnode *ccl_hbtree_search_node(ccl_hbtree *tree, void *k)
 	return node;
 }
 
-int ccl_hbtree_select(ccl_hbtree *tree, void *k, void **v)
+bool ccl_hbtree_select(ccl_hbtree *tree, void *k, void **v)
 {
 	ccl_hbnode *node;
 
 	node = ccl_hbtree_search_node(tree, k);
 	if (node == NULL)
-		return -1;
+		return false;
 	*v = node->value;
-	return 0;
+	return true;
 }
 
 static int ccl_hbtree_rot_left(ccl_hbtree *tree, ccl_hbnode *node)
@@ -363,19 +363,19 @@ static void ccl_hbtree_insert_ftree(ccl_hbtree *tree, ccl_hbnode *node, ccl_hbno
 	return;
 }
 
-int ccl_hbtree_insert(ccl_hbtree *tree, void *k, void *v, void **pv)
+bool ccl_hbtree_insert(ccl_hbtree *tree, void *k, void *v, void **pv)
 {
 	ccl_hbnode *node, *p, *n;
 	int cmp;
 
 	*pv = NULL;
 	if (k == NULL)
-		return -1;
+		return false;
 	// empty tree
 	if (tree->root == NULL) {
 		node = ccl_hbnode_alloc(k, v);
 		if (node == NULL) {
-			return -1;
+			return false;
 		} else {
 			node->balance = 0x0;
 			tree->root = node;
@@ -397,7 +397,7 @@ int ccl_hbtree_insert(ccl_hbtree *tree, void *k, void *v, void **pv)
 			node = node->right;
 		} else {
 			*pv = &node->value;
-			return -1;
+			return false;
 		}
 
 		if (p->balance)
@@ -406,7 +406,7 @@ int ccl_hbtree_insert(ccl_hbtree *tree, void *k, void *v, void **pv)
 
 	node = ccl_hbnode_alloc(k, v);
 	if (node == NULL)
-		return -1;
+		return false;
 	node->parent = p;
 
 	if (cmp < 0)
@@ -418,7 +418,7 @@ int ccl_hbtree_insert(ccl_hbtree *tree, void *k, void *v, void **pv)
 out:
 	*pv = &node->value;
 	tree->count++;
-	return 0;
+	return true;
 }
 
 static void ccl_hbtree_unlink_ftree(ccl_hbtree *tree, ccl_hbnode *node, ccl_hbnode *p, bool dir)
@@ -475,7 +475,7 @@ static void ccl_hbtree_unlink_ftree(ccl_hbtree *tree, ccl_hbnode *node, ccl_hbno
 	return;
 }
 
-int ccl_hbtree_unlink(ccl_hbtree *tree, void *key, void **k, void **v)
+bool ccl_hbtree_unlink(ccl_hbtree *tree, void *key, void **k, void **v)
 {
 	ccl_hbnode *node, *rnode;
 	ccl_hbnode *p, *cnode;          // parent & child of removed node
@@ -483,7 +483,7 @@ int ccl_hbtree_unlink(ccl_hbtree *tree, void *key, void **k, void **v)
 
 	node = ccl_hbtree_search_node(tree, key);
 	if (node == NULL)
-		return -1;
+		return false;
 	*k = node->key;
 	*v = node->value;
 
@@ -534,20 +534,20 @@ int ccl_hbtree_unlink(ccl_hbtree *tree, void *key, void **k, void **v)
 out:
 	ccl_hbnode_dealloc(rnode, k, v);
 	tree->count--;
-	return 0;
+	return true;
 }
 
-int ccl_hbtree_delete(ccl_hbtree *tree, void *key)
+bool ccl_hbtree_delete(ccl_hbtree *tree, void *key)
 {
 	void *k, *v;
 
-	if (ccl_hbtree_unlink(tree, key, &k, &v))
-		return -1;
+	if (!ccl_hbtree_unlink(tree, key, &k, &v))
+		return false;
 	if (tree->kfree != NULL)
 		tree->kfree(k);
 	if (v != NULL && tree->vfree != NULL)
 		tree->vfree(v);
-	return 0;
+	return true;
 }
 
 static ccl_hbnode *ccl_hbnode_next(ccl_hbnode *node)
@@ -572,20 +572,20 @@ static ccl_hbnode *ccl_hbnode_next(ccl_hbnode *node)
 	return n;
 }
 
-int ccl_hbtree_foreach(ccl_hbtree *tree, ccl_dforeach_cb cb, void *user)
+bool ccl_hbtree_foreach(ccl_hbtree *tree, ccl_dforeach_cb cb, void *user)
 {
 	ccl_hbnode *node;
 
 	if (tree->root == NULL)
-		return 0;
+		return true;
 	node = tree->root;
 	while (node->left)
 		node = node->left;
 	for (; node != NULL; node = ccl_hbnode_next(node)) {
-		if (cb(node->key, node->value, user))
-			return -1;
+		if (!cb(node->key, node->value, user))
+			return false;
 	}
-	return 0;
+	return true;
 }
 
 static struct ccl_map_ops map_ops = {

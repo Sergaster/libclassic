@@ -170,15 +170,15 @@ static ccl_rbnode *ccl_rbtree_search_node(ccl_rbtree *tree, void *k)
 	return node;
 }
 
-int ccl_rbtree_select(ccl_rbtree *tree, void *k, void **v)
+bool ccl_rbtree_select(ccl_rbtree *tree, void *k, void **v)
 {
 	ccl_rbnode *node;
 
 	node = ccl_rbtree_search_node(tree, k);
 	if (node == NULL)
-		return -1;
+		return false;
 	*v = node->value;
-	return 0;
+	return true;
 }
 
 static void ccl_rbtree_rot_left(ccl_rbtree *tree, ccl_rbnode *node)
@@ -316,20 +316,20 @@ static void ccl_rbtree_insert_ftree(ccl_rbtree *tree, ccl_rbnode *node)
 	return;
 }
 
-int ccl_rbtree_insert(ccl_rbtree *tree, void *k, void *v, void **pv)
+bool ccl_rbtree_insert(ccl_rbtree *tree, void *k, void *v, void **pv)
 {
 	ccl_rbnode *node, *p;
 	int ret;
 
 	*pv = NULL;
 	if (k == NULL)
-		return -1;
+		return false;
 
 	// empty tree
 	if (tree->root == NULL) {
 		node = ccl_rbnode_alloc(k, v, true);
 		if (node == NULL) {
-			return -1;
+			return false;
 		} else {
 			node->black = true;
 			tree->root = node;
@@ -349,13 +349,13 @@ int ccl_rbtree_insert(ccl_rbtree *tree, void *k, void *v, void **pv)
 			node = node->right;
 		} else {
 			*pv = &node->value;
-			return -1;
+			return false;
 		}
 	}
 
 	node = ccl_rbnode_alloc(k, v, false);
 	if (node == NULL)
-		return -1;
+		return false;
 	node->parent = p;
 	if (ret < 0)
 		p->left = node;
@@ -367,7 +367,7 @@ int ccl_rbtree_insert(ccl_rbtree *tree, void *k, void *v, void **pv)
 out:
 	*pv = &node->value;
 	tree->count++;
-	return 0;
+	return true;
 }
 
 static void ccl_rbtree_unlink_ftree(ccl_rbtree *tree, ccl_rbnode *n, ccl_rbnode *p, bool dir)
@@ -454,7 +454,7 @@ static void ccl_rbtree_unlink_ftree(ccl_rbtree *tree, ccl_rbnode *n, ccl_rbnode 
 	return;
 }
 
-int ccl_rbtree_unlink(ccl_rbtree *tree, void *key, void **k, void **v)
+bool ccl_rbtree_unlink(ccl_rbtree *tree, void *key, void **k, void **v)
 {
 	ccl_rbnode *node, *rnode;
 	ccl_rbnode *p, *cnode;		// parent & child of removed node
@@ -462,7 +462,7 @@ int ccl_rbtree_unlink(ccl_rbtree *tree, void *key, void **k, void **v)
 
 	node = ccl_rbtree_search_node(tree, key);
 	if (node == NULL)
-		return -1;
+		return false;
 	*k = node->key;
 	*v = node->value;
 
@@ -506,36 +506,36 @@ int ccl_rbtree_unlink(ccl_rbtree *tree, void *key, void **k, void **v)
 		ccl_rbtree_unlink_ftree(tree, cnode, p, dir);
 	ccl_rbnode_dealloc(rnode, k, v);
 	tree->count--;
-	return 0;
+	return true;
 }
  
-int ccl_rbtree_delete(ccl_rbtree *tree, void *key)
+bool ccl_rbtree_delete(ccl_rbtree *tree, void *key)
 {
 	void *k, *v;
 
-	if (ccl_rbtree_unlink(tree, key, &k, &v))
-		return -1;
+	if (!ccl_rbtree_unlink(tree, key, &k, &v))
+		return false;
 	if (tree->kfree != NULL)
 		tree->kfree(k);
 	if (v != NULL && tree->vfree != NULL)
 		tree->vfree(v);
-	return 0;
+	return true;
 }
 
-int ccl_rbtree_foreach(ccl_rbtree *tree, ccl_dforeach_cb cb, void *user) 
+bool ccl_rbtree_foreach(ccl_rbtree *tree, ccl_dforeach_cb cb, void *user) 
 {
 	ccl_rbnode *node;
 
 	if (tree->root == NULL)
-		return 0;
+		return true;
 	node = tree->root;
 	while (node->left)
 		node = node->left;
 	for (; node != NULL; node = ccl_rbnode_next(node)) {
-		if (cb(node->key, node->value, user))
-			return -1;
+		if (!cb(node->key, node->value, user))
+			return false;
 	}
-	return 0;
+	return true;
 }
 
 static struct ccl_map_ops map_ops = {

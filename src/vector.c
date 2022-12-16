@@ -231,7 +231,7 @@ bool ccl_vector_foreach(ccl_vector *vec, ccl_sforeach_cb cb, void *user)
 	int i;
 
 	for (i = 0; i < vec->count; i++) {
-		if (cb(vec->data[i], user))
+		if (!cb(vec->data[i], user))
 			return false;
 	}
 	return true;

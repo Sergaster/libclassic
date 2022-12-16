@@ -65,11 +65,11 @@ typedef struct ccl_skiplist_iter_t {
 ccl_skiplist *ccl_skiplist_new(ccl_cmp_cb, ccl_free_cb, ccl_free_cb, ccl_maxlink_cb, unsigned);
 size_t ccl_skiplist_clear(ccl_skiplist *tree);
 void ccl_skiplist_free(ccl_skiplist *tree);
-int ccl_skiplist_select(ccl_skiplist *tree, void *k, void **v);
-int ccl_skiplist_insert(ccl_skiplist *tree, void *k, void *v, void **);
-int ccl_skiplist_unlink(ccl_skiplist *tree, void *key, void **k, void **v);
-int ccl_skiplist_delete(ccl_skiplist *tree, void *k);
-int ccl_skiplist_foreach(ccl_skiplist *tree, ccl_dforeach_cb cb, void *user);
+bool ccl_skiplist_select(ccl_skiplist *tree, void *k, void **v);
+bool ccl_skiplist_insert(ccl_skiplist *tree, void *k, void *v, void **);
+bool ccl_skiplist_unlink(ccl_skiplist *tree, void *key, void **k, void **v);
+bool ccl_skiplist_delete(ccl_skiplist *tree, void *k);
+bool ccl_skiplist_foreach(ccl_skiplist *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_skiplist(ccl_cmp_cb, ccl_free_cb, ccl_free_cb, ccl_maxlink_cb, unsigned);
 

@@ -192,7 +192,7 @@ bool ccl_list_foreach(ccl_list *list, ccl_sforeach_cb cb, void *user)
 	ccl_list_node *node;
 
 	for (node = list->head; node; node = node->next) {
-		if (cb(node->value, user))
+		if (!cb(node->value, user))
 			return false;
 	}
 	return true;

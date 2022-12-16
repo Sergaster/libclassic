@@ -136,20 +136,20 @@ static ccl_skipnode *ccl_skiplist_search_node(ccl_skiplist *list, void *k)
 	return NULL;
 }
 
-int ccl_skiplist_select(ccl_skiplist *list, void *k, void **v)
+bool ccl_skiplist_select(ccl_skiplist *list, void *k, void **v)
 {
 	ccl_skipnode *node;
 
 	if (k == NULL)
-		return -1;
+		return false;
 	node = ccl_skiplist_search_node(list, k);
 	if (node == NULL)
-		return -1;
+		return false;
 	*v = node->value;
-	return 0;
+	return true;
 }
 
-int ccl_skiplist_insert(ccl_skiplist *list, void *k, void *v, void **pv)
+bool ccl_skiplist_insert(ccl_skiplist *list, void *k, void *v, void **pv)
 {
 	ccl_skipnode *node, *node1, *node2, *update[MAX_LINK];
 	unsigned i, nlinks;
@@ -157,7 +157,7 @@ int ccl_skiplist_insert(ccl_skiplist *list, void *k, void *v, void **pv)
 	
 	*pv = NULL;
 	if (k == NULL)
-		return -1;
+		return false;
 	memset(update, 0, MAX_LINK * sizeof(update[0]));
 
 	node1 = list->head;
@@ -173,7 +173,7 @@ int ccl_skiplist_insert(ccl_skiplist *list, void *k, void *v, void **pv)
 				break;
 			} else if (ret == 0) {
 				*pv = &node2->value;
-				return -1;
+				return false;
 			}
 			node1 = node2;
 		}
@@ -182,7 +182,7 @@ int ccl_skiplist_insert(ccl_skiplist *list, void *k, void *v, void **pv)
 
 	node = ccl_skipnode_alloc(k, list->maxlink(list));
 	if (node == NULL)
-		return -1;
+		return false;
 
 	nlinks = node->link_count;
 	if (list->top_link < nlinks) {
@@ -204,10 +204,10 @@ int ccl_skiplist_insert(ccl_skiplist *list, void *k, void *v, void **pv)
 
 	*pv = &node->value;
 	list->count++;
-	return 0;
+	return true;
 }
 
-int ccl_skiplist_unlink(ccl_skiplist *list, void *key, void **k, void **v)
+bool ccl_skiplist_unlink(ccl_skiplist *list, void *key, void **k, void **v)
 {
 	ccl_skipnode *node, *node2, *update[MAX_LINK];
 	unsigned i;
@@ -215,7 +215,7 @@ int ccl_skiplist_unlink(ccl_skiplist *list, void *key, void **k, void **v)
 	bool found;
 
 	if (key == NULL)
-		return -1;
+		return false;
 
 	memset(update, 0, MAX_LINK * sizeof(update[0]));
 	node = list->head;
@@ -240,7 +240,7 @@ int ccl_skiplist_unlink(ccl_skiplist *list, void *key, void **k, void **v)
 	}
 
 	if (!found)
-		return -1;
+		return false;
 
 	node = node->link[0];
 	for (i = 0; i <= list->top_link; i++) {
@@ -259,31 +259,31 @@ int ccl_skiplist_unlink(ccl_skiplist *list, void *key, void **k, void **v)
 		list->top_link--;
 	ccl_skipnode_dealloc(node, k, v);
 	list->count--;
-	return 0;
+	return true;
 }
 
-int ccl_skiplist_delete(ccl_skiplist *list, void *key)
+bool ccl_skiplist_delete(ccl_skiplist *list, void *key)
 {
 	void *k, *v;
 
-	if (ccl_skiplist_unlink(list, key, &k, &v))
-		return -1;
+	if (!ccl_skiplist_unlink(list, key, &k, &v))
+		return false;
 	if (list->kfree != NULL)
 		list->kfree(k);
 	if (v != NULL && list->vfree != NULL)
 		list->vfree(v);
-	return 0;
+	return true;
 }
 
-int ccl_skiplist_foreach(ccl_skiplist *list, ccl_dforeach_cb cb, void *user)
+bool ccl_skiplist_foreach(ccl_skiplist *list, ccl_dforeach_cb cb, void *user)
 {
 	ccl_skipnode *node;
 
 	for (node = list->head->link[0]; node; node = node->link[0]) {
-		if (cb(node->key, node->value, user))
-			return -1;
+		if (!cb(node->key, node->value, user))
+			return false;
 	}
-	return 0;
+	return true;
 }
 
 static struct ccl_map_ops map_ops = {

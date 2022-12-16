@@ -57,11 +57,11 @@ typedef struct ccl_prtree_iter_t {
 ccl_prtree *ccl_prtree_new(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
 size_t ccl_prtree_clear(ccl_prtree *tree);
 void ccl_prtree_free(ccl_prtree *tree);
-int ccl_prtree_select(ccl_prtree *tree, void *k, void **v);
-int ccl_prtree_insert(ccl_prtree *tree, void *k, void *v, void **);
-int ccl_prtree_unlink(ccl_prtree *tree, void *key, void **k, void **v);
-int ccl_prtree_delete(ccl_prtree *tree, void *k);
-int ccl_prtree_foreach(ccl_prtree *tree, ccl_dforeach_cb cb, void *user);
+bool ccl_prtree_select(ccl_prtree *tree, void *k, void **v);
+bool ccl_prtree_insert(ccl_prtree *tree, void *k, void *v, void **);
+bool ccl_prtree_unlink(ccl_prtree *tree, void *key, void **k, void **v);
+bool ccl_prtree_delete(ccl_prtree *tree, void *k);
+bool ccl_prtree_foreach(ccl_prtree *tree, ccl_dforeach_cb cb, void *user);
 
 ccl_map *ccl_map_prtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
 
