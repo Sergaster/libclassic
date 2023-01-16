@@ -144,6 +144,16 @@ bool ccl_vector_insert(ccl_vector *vec, size_t index, void *from)
 	return true;
 }
 
+bool ccl_vector_pushn(ccl_vector *vec, size_t count, void **first)
+{
+	return ccl_vector_insertn(vec, vec->count, count, first);
+}
+
+bool ccl_vector_push(ccl_vector *vec, void *from)
+{
+	return ccl_vector_insert(vec, vec->count, from);
+}
+
 bool ccl_vector_updaten(ccl_vector *vec, size_t index, size_t count, void **first)
 {
 	void *v;

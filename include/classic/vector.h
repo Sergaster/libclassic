@@ -41,6 +41,8 @@ bool ccl_vector_selectn(ccl_vector *, size_t, size_t, void **);
 bool ccl_vector_select(ccl_vector *, size_t, void **);
 bool ccl_vector_insertn(ccl_vector *, size_t, size_t, void **);
 bool ccl_vector_insert(ccl_vector *, size_t, void *);
+bool ccl_vector_pushn(ccl_vector *, size_t, void **);
+bool ccl_vector_push(ccl_vector *, void *);
 bool ccl_vector_updaten(ccl_vector *, size_t, size_t, void **);
 bool ccl_vector_update(ccl_vector *, size_t, void *);
 bool ccl_vector_unlinkn(ccl_vector *, size_t, size_t, void **);
