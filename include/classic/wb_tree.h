@@ -64,7 +64,8 @@ bool ccl_wbtree_unlink(ccl_wbtree *tree, void *key, void **k, void **v);
 bool ccl_wbtree_delete(ccl_wbtree *tree, void *k);
 bool ccl_wbtree_foreach(ccl_wbtree *tree, ccl_dforeach_cb cb, void *user);
 
-ccl_map *ccl_map_wbtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
+/* sorted map */
+ccl_map *ccl_smap_wbtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
 
 #ifdef  __cplusplus
 }

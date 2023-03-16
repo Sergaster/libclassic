@@ -63,7 +63,8 @@ bool ccl_hbtree_unlink(ccl_hbtree *tree, void *key, void **k, void **v);
 bool ccl_hbtree_delete(ccl_hbtree *tree, void *k);
 bool ccl_hbtree_foreach(ccl_hbtree *tree, ccl_dforeach_cb cb, void *user);
 
-ccl_map *ccl_map_hbtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
+/* sorted map */
+ccl_map *ccl_smap_hbtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
 
 #ifdef  __cplusplus
 }

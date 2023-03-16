@@ -88,7 +88,7 @@ size_t ccl_skiplist_clear(ccl_skiplist *list)
 		ccl_skipnode_dealloc(node, &k, &v);
 		if (list->kfree != NULL)
 			list->kfree(k);
-		if (v != NULL && list->vfree != NULL)
+		if (list->vfree != NULL)
 			list->vfree(v);
 		node = next;
 	}
@@ -270,7 +270,7 @@ bool ccl_skiplist_delete(ccl_skiplist *list, void *key)
 		return false;
 	if (list->kfree != NULL)
 		list->kfree(k);
-	if (v != NULL && list->vfree != NULL)
+	if (list->vfree != NULL)
 		list->vfree(v);
 	return true;
 }
@@ -295,7 +295,7 @@ static struct ccl_map_ops map_ops = {
 	(ccl_map_foreach_cb)ccl_skiplist_foreach,
 };
 
-ccl_map *ccl_map_skiplist(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_maxlink_cb maxlink_cb, unsigned max_link)
+ccl_map *ccl_smap_skiplist(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_maxlink_cb maxlink_cb, unsigned max_link)
 {
 	ccl_map *map;
 

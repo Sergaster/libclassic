@@ -57,7 +57,8 @@ bool ccl_ht2_unlink(ccl_ht2 *ht, void *key, void **k, void **v);
 bool ccl_ht2_delete(ccl_ht2 *ht, void *key);
 bool ccl_ht2_foreach(ccl_ht2 *ht, ccl_dforeach_cb cb, void *user);
 
-ccl_map *ccl_map_ht2(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_hash_cb hash_cb, unsigned size);
+/* unsorted map */
+ccl_map *ccl_umap_ht2(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_hash_cb hash_cb, unsigned size);
 
 #ifdef  __cplusplus
 }

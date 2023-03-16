@@ -63,7 +63,8 @@ bool ccl_rbtree_unlink(ccl_rbtree *tree, void *key, void **k, void **v);
 bool ccl_rbtree_delete(ccl_rbtree *tree, void *k);
 bool ccl_rbtree_foreach(ccl_rbtree *tree, ccl_dforeach_cb cb, void *user);
 
-ccl_map *ccl_map_rbtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
+/* sorted map */
+ccl_map *ccl_smap_rbtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb);
 
 #ifdef  __cplusplus
 }

@@ -98,7 +98,7 @@ void ccl_list_clear(ccl_list *list)
 	node = list->head;
 	while (node) {
 		next = node->next;
-		if (node->value != NULL && list->vfree)
+		if (list->vfree != NULL)
 			list->vfree(node->value);
 		_ccl_list_node_free(node);
 		node = next;

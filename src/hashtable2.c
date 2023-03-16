@@ -66,7 +66,7 @@ void ccl_ht2_clear(ccl_ht2 *ht)
 			continue;
 		if (ht->kfree)
 			ht->kfree(node->key);
-		if (node->value != NULL && ht->vfree)
+		if (ht->vfree)
 			ht->vfree(node->value);
 		ht->count--;
 	}
@@ -286,7 +286,7 @@ bool ccl_ht2_delete(ccl_ht2 *ht, void *key)
 		return false;
 	if (ht->kfree != NULL)
 		ht->kfree(k);
-	if (v != NULL && ht->vfree != NULL)
+	if (ht->vfree != NULL)
 		ht->vfree(v);
         return true;
 }
@@ -315,7 +315,7 @@ static struct ccl_map_ops map_ops = {
 	(ccl_map_foreach_cb)ccl_ht2_foreach,
 };
 
-ccl_map *ccl_map_ht2(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_hash_cb hash_cb, unsigned size)
+ccl_map *ccl_umap_ht2(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_hash_cb hash_cb, unsigned size)
 {
 	ccl_map *map;
 

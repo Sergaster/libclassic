@@ -67,7 +67,8 @@ bool ccl_trtree_unlink(ccl_trtree *tree, void *key, void **k, void **v);
 bool ccl_trtree_delete(ccl_trtree *tree, void *k);
 bool ccl_trtree_foreach(ccl_trtree *tree, ccl_dforeach_cb cb, void *user);
 
-ccl_map *ccl_map_trtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb, ccl_prio_cb);
+/* sorted map */
+ccl_map *ccl_smap_trtree(ccl_cmp_cb, ccl_free_cb, ccl_free_cb, ccl_prio_cb);
 
 #ifdef  __cplusplus
 }

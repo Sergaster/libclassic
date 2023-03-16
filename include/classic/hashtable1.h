@@ -60,7 +60,8 @@ bool ccl_ht1_unlink(ccl_ht1 *ht, void *key, void **k, void **v);
 bool ccl_ht1_delete(ccl_ht1 *ht, void *key);
 bool ccl_ht1_foreach(ccl_ht1 *ht, ccl_dforeach_cb cb, void *user);
 
-ccl_map *ccl_map_ht1(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_hash_cb hash_cb, unsigned size);
+/* unsorted map */
+ccl_map *ccl_umap_ht1(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_hash_cb hash_cb, unsigned size);
 
 #ifdef  __cplusplus
 }

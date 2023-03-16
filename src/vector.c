@@ -46,17 +46,13 @@ ccl_vector *ccl_vector_new(ccl_cmp_cb cmp_cb, ccl_free_cb free_cb)
 
 void ccl_vector_clear(ccl_vector *vec)
 {
-	void *v;
 	size_t i;
 
 	if (vec->data == NULL)
 		return;
 	if (vec->free) {
-		for (i = 0; i < vec->count; i++) {
-			v = vec->data[i];
-			if (v != NULL)
-				vec->free(v);
-		}
+		for (i = 0; i < vec->count; i++)
+			vec->free(vec->data[i]);
 	}
 	free(vec->data);
 	vec->data = NULL;
@@ -156,7 +152,6 @@ bool ccl_vector_push(ccl_vector *vec, void *from)
 
 bool ccl_vector_updaten(ccl_vector *vec, size_t index, size_t count, void **first)
 {
-	void *v;
 	size_t i;
 
 	if (count == 0)
@@ -164,11 +159,8 @@ bool ccl_vector_updaten(ccl_vector *vec, size_t index, size_t count, void **firs
 	if (index + count > vec->count)
 		return false;
 	if (vec->free) {
-		for (i = 0; i < count; i++) {
-			v = vec->data[index + i];
-			if (v != NULL)
-				vec->free(v);
-		}
+		for (i = 0; i < count; i++)
+			vec->free(vec->data[index + i]);
 	}
 	memcpy(&vec->data[index], first, count * sizeof(void *));
 	vec->count += count;
@@ -210,7 +202,6 @@ bool ccl_vector_unlink(ccl_vector *vec, size_t index, void **into)
 
 bool ccl_vector_deleten(ccl_vector *vec, size_t index, size_t count)
 {
-	void *v;
 	size_t i;
 
 	if (count == 0)
@@ -218,11 +209,8 @@ bool ccl_vector_deleten(ccl_vector *vec, size_t index, size_t count)
 	if (index + count > vec->count)
 		return false;
 	if (vec->free) {
-		for (i = 0; i < count; i++) {
-			v = vec->data[i];
-			if (v != NULL)
-				vec->free(v);
-		}
+		for (i = 0; i < count; i++)
+			vec->free(vec->data[i]);
 	}
 	memmove(&vec->data[index], &vec->data[index + count], count * sizeof(void *));
 	vec -= count;

@@ -71,7 +71,8 @@ bool ccl_skiplist_unlink(ccl_skiplist *tree, void *key, void **k, void **v);
 bool ccl_skiplist_delete(ccl_skiplist *tree, void *k);
 bool ccl_skiplist_foreach(ccl_skiplist *tree, ccl_dforeach_cb cb, void *user);
 
-ccl_map *ccl_map_skiplist(ccl_cmp_cb, ccl_free_cb, ccl_free_cb, ccl_maxlink_cb, unsigned);
+/* sorted map */
+ccl_map *ccl_smap_skiplist(ccl_cmp_cb, ccl_free_cb, ccl_free_cb, ccl_maxlink_cb, unsigned);
 
 #ifdef  __cplusplus
 }

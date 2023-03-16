@@ -86,7 +86,7 @@ size_t ccl_sptree_clear(ccl_sptree *tree)
 		ccl_spnode_dealloc(node, &k, &v);
 		if (tree->kfree != NULL)
 			tree->kfree(k);
-		if (v != NULL && tree->vfree != NULL)
+		if (tree->vfree != NULL)
 			tree->vfree(v);
 		if (p == NULL) {
 			tree->root = NULL;
@@ -383,7 +383,7 @@ bool ccl_sptree_delete(ccl_sptree *tree, void *key)
 		return false;
 	if (tree->kfree != NULL)
 		tree->kfree(k);
-	if (v != NULL && tree->vfree != NULL)
+	if (tree->vfree != NULL)
 		tree->vfree(v);
 	return true;
 }
@@ -435,7 +435,7 @@ static struct ccl_map_ops map_ops = {
 	(ccl_map_foreach_cb)ccl_sptree_foreach,
 };
 
-ccl_map *ccl_map_sptree(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb)
+ccl_map *ccl_smap_sptree(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb)
 {
 	ccl_map *map;
 

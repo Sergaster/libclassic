@@ -88,7 +88,7 @@ size_t ccl_trtree_clear(ccl_trtree *tree)
 		ccl_trnode_dealloc(node, &k, &v);
 		if (tree->kfree != NULL)
 			tree->kfree(k);
-		if (v != NULL && tree->vfree != NULL)
+		if (tree->vfree != NULL)
 			tree->vfree(v);
 		if (p == NULL) {
 			tree->root = NULL;
@@ -312,7 +312,7 @@ bool ccl_trtree_delete(ccl_trtree *tree, void *key)
 		return false;
 	if (tree->kfree != NULL)
 		tree->kfree(k);
-	if (v != NULL && tree->vfree != NULL)
+	if (tree->vfree != NULL)
 		tree->vfree(v);
 	return true;
 }
@@ -364,7 +364,7 @@ static struct ccl_map_ops map_ops = {
 	(ccl_map_foreach_cb)ccl_trtree_foreach,
 };
 
-ccl_map *ccl_map_trtree(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_prio_cb prio_cb)
+ccl_map *ccl_smap_trtree(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb, ccl_prio_cb prio_cb)
 {
 	ccl_map *map;
 

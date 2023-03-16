@@ -86,7 +86,7 @@ size_t ccl_rbtree_clear(ccl_rbtree *tree)
 		ccl_rbnode_dealloc(node, &k, &v);
 		if (tree->kfree != NULL)
 			tree->kfree(k);
-		if (v != NULL && tree->vfree != NULL)
+		if (tree->vfree != NULL)
 			tree->vfree(v);
 		if (p == NULL) {
 			tree->root = NULL;
@@ -517,7 +517,7 @@ bool ccl_rbtree_delete(ccl_rbtree *tree, void *key)
 		return false;
 	if (tree->kfree != NULL)
 		tree->kfree(k);
-	if (v != NULL && tree->vfree != NULL)
+	if (tree->vfree != NULL)
 		tree->vfree(v);
 	return true;
 }
@@ -547,7 +547,7 @@ static struct ccl_map_ops map_ops = {
 	(ccl_map_foreach_cb)ccl_rbtree_foreach,
 };
 
-ccl_map *ccl_map_rbtree(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb)
+ccl_map *ccl_smap_rbtree(ccl_cmp_cb cmp_cb, ccl_free_cb kfree_cb, ccl_free_cb vfree_cb)
 {
 	ccl_map *map;
 
