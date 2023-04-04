@@ -142,15 +142,14 @@ bool ccl_list_push_tail(ccl_list *list, void *v)
 	return ccl_list_append(list, v);
 }
 
-void *ccl_list_pop_tail(ccl_list *list)
+bool ccl_list_pop_tail(ccl_list *list, void **v)
 {
 	ccl_list_node *node;
-	void *v;
 
 	if (list->tail == NULL)
 		return NULL;
 	node = list->tail;
-	v = node->value;
+	*v = node->value;
 	if (list->head == list->tail) {
 		list->head = list->tail = NULL;
 	} else {
@@ -167,15 +166,14 @@ bool ccl_list_push_head(ccl_list *list, void *v)
 	return ccl_list_prepend(list, v);
 }
 
-void *ccl_list_pop_head(ccl_list *list)
+bool ccl_list_pop_head(ccl_list *list, void **v)
 {
 	ccl_list_node *node;
-	void *v;
 
 	if (list->head == NULL)
-		return NULL;
+		return false;
 	node = list->head;
-	v = node->value;
+	*v = node->value;
 	if (list->head == list->tail) {
 		list->head = list->tail = NULL;
 	} else {
@@ -184,7 +182,7 @@ void *ccl_list_pop_head(ccl_list *list)
 	}
 	list->count--;
 	_ccl_list_node_free(node);
-	return v;
+	return true;
 }
 
 bool ccl_list_foreach(ccl_list *list, ccl_sforeach_cb cb, void *user)

@@ -36,7 +36,8 @@ typedef struct ccl_vector_t {
 } ccl_vector;
 
 typedef struct ccl_vector_iter_t {
-	void **node;
+//	void **node;
+	size_t index;
 	ccl_vector *vec;
 } ccl_vector_iter;
 

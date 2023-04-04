@@ -39,9 +39,9 @@ void ccl_list_init(ccl_list *, ccl_cmp_cb, ccl_free_cb);
 void ccl_list_clear(ccl_list *);
 bool ccl_list_foreach(ccl_list *, ccl_sforeach_cb, void *);
 bool ccl_list_push_head(ccl_list *l, void *);
-void *ccl_list_pop_head(ccl_list *);
+bool ccl_list_pop_head(ccl_list *, void **);
 bool ccl_list_push_tail(ccl_list *l, void *);
-void *ccl_list_pop_tail(ccl_list *);
+bool ccl_list_pop_tail(ccl_list *, void **);
 bool ccl_list_sort(ccl_list *);
 size_t ccl_list_count(ccl_list *);
 
