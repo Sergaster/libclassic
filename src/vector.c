@@ -123,7 +123,7 @@ bool ccl_vector_insertn(ccl_vector *vec, size_t index, size_t count, void **firs
 		vec->capacity = new_capacity;
 	}
 	if (index != vec->count)
-		memmove(&vec->data[index + count], &vec->data[index], vec->count - index);
+		memmove(&vec->data[index + count], &vec->data[index], (vec->count - index) * sizeof(void *));
 	memcpy(&vec->data[index], first, count * sizeof(void *));
 	vec->count += count;
 	vec->sorted = false;
@@ -184,7 +184,7 @@ bool ccl_vector_unlinkn(ccl_vector *vec, size_t index, size_t count, void **into
 		return false;
 	if (index + count > vec->count)
 		return false;
-	memcpy(into, &vec->data[index], count);
+	memcpy(into, &vec->data[index], count * sizeof(void *));
 	memmove(&vec->data[index], &vec->data[index + count], count * sizeof(void *));
 	vec->count -= count;
 	return true;
