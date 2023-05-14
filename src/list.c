@@ -223,6 +223,16 @@ size_t ccl_list_count(ccl_list *list)
 	return list->count;
 }
 
+bool ccl_list_empty(ccl_list *list)
+{
+	return (list->head == NULL);
+}
+
+bool ccl_list_sorted(ccl_list *list)
+{
+	return list->sorted;
+}
+
 ccl_list_iter *ccl_list_iter_new(ccl_list *list)
 {
 	ccl_list_iter *it;
@@ -253,31 +263,31 @@ void ccl_list_iter_end(ccl_list_iter *it)
 	return;
 }
 
-bool ccl_list_iter_value(ccl_list_iter *it, void **v)
+void *ccl_list_iter_value(ccl_list_iter *it)
 {
-	if (it->node == NULL)
-		return false;
-	*v = it->node->value;
-	return true;
+	return it->node->value;
 }
 
 bool ccl_list_iter_prevn(ccl_list_iter *it, size_t n)
 {
-	ccl_list_node *node = it->node;
+	ccl_list_node *node;
 	size_t i;
 
+	node = it->node;
 	for (i = 0; i < n; i++) {
 		if (node == NULL)
 			return false;
 		node = node->prev;
 	}
+	if (node == NULL)
+		return false;
 	it->node = node;
 	return true;
 }
 
 bool ccl_list_iter_prev(ccl_list_iter *it)
 {
-	if (it->node == NULL || it->node->prev == NULL)
+	if (it->node->prev == NULL)
 		return false;
 	it->node = it->node->prev;
 	return true;
@@ -285,21 +295,24 @@ bool ccl_list_iter_prev(ccl_list_iter *it)
 
 bool ccl_list_iter_nextn(ccl_list_iter *it, size_t n)
 {
-	ccl_list_node *node = it->node;
+	ccl_list_node *node;
 	size_t i;
 
+	node = it->node;
 	for (i = 0; i < n; i++) {
 		if (node == NULL)
 			return false;
 		node = node->next;
 	}
+	if (node == NULL)
+		return false;
 	it->node = node;
 	return true;
 }
 
 bool ccl_list_iter_next(ccl_list_iter *it)
 {
-	if (it->node == NULL || it->node->next == NULL)
+	if (it->node->next == NULL)
 		return false;
 	it->node = it->node->next;
 	return true;
@@ -307,9 +320,12 @@ bool ccl_list_iter_next(ccl_list_iter *it)
 
 void *ccl_list_iter_unlink(ccl_list_iter *it)
 {
-	ccl_list *list = it->list;
-	ccl_list_node *node = it->node;
+	ccl_list *list;
+	ccl_list_node *node;
+	void *value;
 
+	list = it->list;
+	node = it->node;
 	if (list->head == node)
 		list->head = node->next;
 	if (list->tail == node)
@@ -320,17 +336,17 @@ void *ccl_list_iter_unlink(ccl_list_iter *it)
 		node->next->prev = node->prev;
 	list->count--;
 	node->next = node->prev = NULL;
-	return node->value;
+	value = node->value;
+	_ccl_list_node_free(node);
+	return value;
 }
 
 void ccl_list_iter_delete(ccl_list_iter *it)
 {
-	ccl_list *list = it->list;
-	ccl_list_node *node = it->node;
+	ccl_list *list;
 	void *v;
 
-	if (node == NULL)
-		return;
+	list = it->list;
 	v = ccl_list_iter_unlink(it);
 	if (list->vfree)
 		list->vfree(v);
@@ -338,35 +354,44 @@ void ccl_list_iter_delete(ccl_list_iter *it)
 	return;
 }
 
-bool ccl_list_iter_insert(ccl_list_iter *it, void *v)
+bool ccl_list_iter_insertb(ccl_list_iter *it, void *v)	/* before */
 {
-	ccl_list *list = it->list;
+	ccl_list *list;
 	ccl_list_node *node, *node2;
 
 	node = _ccl_list_node_new(v);
 	if (node == NULL)
 		return false;
 
-	if (list->head == NULL) {
-		list->head = node;
-		list->tail = node;
-		goto out;
-	}
-
+	list = it->list;
 	node2 = it->node;
-	if (node2 == NULL) {
-		ccl_list_node *tail = list->tail;
+	if (node2->prev == NULL)
+		list->head = node;
+	node->prev = node2->prev;
+	node->next = node2;
+	node2->prev = node;
+out:
+	list->count++;
+	list->sorted = false;
+	return true;
+}
 
-		tail->next = node;
-		node->prev = tail;
+bool ccl_list_iter_inserta(ccl_list_iter *it, void *v)	/* after */
+{
+	ccl_list *list;
+	ccl_list_node *node, *node2;
+
+	node = _ccl_list_node_new(v);
+	if (node == NULL)
+		return false;
+
+	list = it->list;
+	node2 = it->node;
+	if (node2->next == NULL)
 		list->tail = node;
-	} else {
-		if (node2->prev == NULL)
-			list->head = node;
-		node->prev = node2->prev;
-		node->next = node2;
-		node2->prev = node;
-	}
+	node->next = node2->next;
+	node->prev = node2;
+	node2->next = node;
 out:
 	list->count++;
 	list->sorted = false;
@@ -376,8 +401,5 @@ out:
 int ccl_list_iter_cmp(void *v, ccl_list_iter *it)
 {
 	ccl_list *list = it->list;
-
-	if (it->node == NULL)
-		return -1;
 	return list->cmp(v, it->node->value);
 }

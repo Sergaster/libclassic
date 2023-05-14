@@ -271,6 +271,11 @@ size_t ccl_vector_count(ccl_vector *vec)
 	return vec->count;
 }
 
+bool ccl_vector_empty(ccl_vector *vec)
+{
+	return (vec->count == 0);
+}
+
 bool ccl_vector_sorted(ccl_vector *vec)
 {
 	return vec->sorted;
@@ -303,27 +308,25 @@ void ccl_vector_iter_begin(ccl_vector_iter *it)
 void ccl_vector_iter_end(ccl_vector_iter *it)
 {
 	ccl_vector *vec = it->vec;
-	if (vec->data == NULL || vec->count == 0)
+	if (vec->count == 0) {
+		it->index = 0;
 		return;
+	}
 	it->index = vec->count - 1;
 	return;
 }
 
-bool ccl_vector_iter_value(ccl_vector_iter *it, void **v)
+void *ccl_vector_iter_value(ccl_vector_iter *it)
 {
 	ccl_vector *vec = it->vec;
-
-	if (vec->data == NULL || vec->count == 0)
-		return false;
-	*v = vec->data[it->index];
-	return true;
+	return vec->data[it->index];
 }
 
 bool ccl_vector_iter_prevn(ccl_vector_iter *it, size_t n)
 {
 	ccl_vector *vec = it->vec;
 
-	if (vec->data == NULL || vec->count == 0)
+	if (vec->count == 0)
 		return false;
 	if (it->index + 1 > n)
 		return false;
@@ -340,7 +343,7 @@ bool ccl_vector_iter_nextn(ccl_vector_iter *it, size_t n)
 {       
 	ccl_vector *vec = it->vec;
 
-	if (vec->data == NULL || vec->count == 0)
+	if (vec->count == 0)
 		return false;
 	if (it->index + n >= vec->count)
 		return false;
@@ -357,7 +360,7 @@ bool ccl_vector_iter_unlinkn(ccl_vector_iter *it, size_t count, void **into)
 {
 	ccl_vector *vec = it->vec;
 
-	if (vec->data == NULL || vec->count == 0)
+	if (vec->count == 0)
 		return false;
 	return ccl_vector_unlinkn(vec, it->index, count, into);
 }
@@ -366,7 +369,7 @@ bool ccl_vector_iter_unlink(ccl_vector_iter *it, void **into)
 {
 	ccl_vector *vec = it->vec;
 
-	if (vec->data == NULL || vec->count == 0)
+	if (vec->count == 0)
 		return false;
 	return ccl_vector_unlink(vec, it->index, into);
 }
@@ -375,9 +378,12 @@ bool ccl_vector_iter_deleten(ccl_vector_iter *it, size_t count)
 {
 	ccl_vector *vec = it->vec;
 
-	if (vec->data == NULL || vec->count == 0)
+	if (vec->count == 0)
 		return false;
-	return ccl_vector_deleten(vec, it->index, count);
+	if (!ccl_vector_deleten(vec, it->index, count))
+		return false;
+	ccl_vector_iter_free(it);
+	return true;
 }
 
 bool ccl_vector_iter_delete(ccl_vector_iter *it)
@@ -387,9 +393,7 @@ bool ccl_vector_iter_delete(ccl_vector_iter *it)
 
 bool ccl_vector_iter_insertn(ccl_vector_iter *it, size_t count, void **first)
 {
-	ccl_vector *vec = it->vec;
-
-	return ccl_vector_insertn(vec, it->index, count, first);
+	return ccl_vector_insertn(it->vec, it->index, count, first);
 }
 
 bool ccl_vector_iter_insert(ccl_vector_iter *it, void *from)

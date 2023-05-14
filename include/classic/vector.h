@@ -56,6 +56,7 @@ bool ccl_vector_pop_head(ccl_vector *, void **);
 bool ccl_vector_foreach(ccl_vector *, ccl_sforeach_cb, void *);
 bool ccl_vector_sort(ccl_vector *);
 size_t ccl_vector_count(ccl_vector *);
+bool ccl_vector_empty(ccl_vector *);
 bool ccl_vector_sorted(ccl_vector *);
 
 ccl_vector_iter *ccl_vector_iter_new(ccl_vector *);

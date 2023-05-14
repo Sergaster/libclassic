@@ -44,19 +44,22 @@ bool ccl_list_push_tail(ccl_list *l, void *);
 bool ccl_list_pop_tail(ccl_list *, void **);
 bool ccl_list_sort(ccl_list *);
 size_t ccl_list_count(ccl_list *);
+bool ccl_list_empty(ccl_list *);
+bool ccl_list_sorted(ccl_list *);
 
 ccl_list_iter *ccl_list_iter_new(ccl_list *);
 void ccl_list_iter_free(ccl_list_iter *);
-void ccl_list_iter_unlink(ccl_list_iter *);
+void *ccl_list_iter_unlink(ccl_list_iter *);
 void ccl_list_iter_delete(ccl_list_iter *);
-bool ccl_list_iter_insert(ccl_list_iter *, void *);
-bool ccl_list_iter_value(ccl_list_iter *, void **);
+void *ccl_list_iter_value(ccl_list_iter *);
 void ccl_list_iter_begin(ccl_list_iter *);
 void ccl_list_iter_end(ccl_list_iter *);
 bool ccl_list_iter_prev(ccl_list_iter *);
 bool ccl_list_iter_prevn(ccl_list_iter *, size_t);
 bool ccl_list_iter_next(ccl_list_iter *);
 bool ccl_list_iter_nextn(ccl_list_iter *, size_t);
+bool ccl_list_iter_insertb(ccl_list_iter *, void *);
+bool ccl_list_iter_inserta(ccl_list_iter *, void *);
 int ccl_list_iter_cmp(void *, ccl_list_iter *);
 
 #ifdef  __cplusplus
