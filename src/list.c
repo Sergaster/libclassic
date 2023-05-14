@@ -147,7 +147,7 @@ bool ccl_list_pop_tail(ccl_list *list, void **v)
 	ccl_list_node *node;
 
 	if (list->tail == NULL)
-		return NULL;
+		return false;
 	node = list->tail;
 	*v = node->value;
 	if (list->head == list->tail) {
@@ -158,7 +158,7 @@ bool ccl_list_pop_tail(ccl_list *list, void **v)
 	}
 	list->count--;
 	_ccl_list_node_free(node);
-	return v;
+	return true;
 }
 
 bool ccl_list_push_head(ccl_list *list, void *v)
@@ -370,7 +370,6 @@ bool ccl_list_iter_insertb(ccl_list_iter *it, void *v)	/* before */
 	node->prev = node2->prev;
 	node->next = node2;
 	node2->prev = node;
-out:
 	list->count++;
 	list->sorted = false;
 	return true;
@@ -392,7 +391,6 @@ bool ccl_list_iter_inserta(ccl_list_iter *it, void *v)	/* after */
 	node->next = node2->next;
 	node->prev = node2;
 	node2->next = node;
-out:
 	list->count++;
 	list->sorted = false;
 	return true;
