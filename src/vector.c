@@ -28,6 +28,7 @@ void ccl_vector_init(ccl_vector *vec, ccl_cmp_cb cmp_cb, ccl_free_cb free_cb)
 {
 	vec->data = NULL;
 	vec->count = vec->capacity = 0;
+	vec->cmp = cmp_cb;
 	vec->free = free_cb;
 	vec->sorted = true;
 	return;
@@ -246,7 +247,7 @@ bool ccl_vector_pop_head(ccl_vector *vec, void **v)
 
 bool ccl_vector_foreach(ccl_vector *vec, ccl_sforeach_cb cb, void *user)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < vec->count; i++) {
 		if (!cb(vec->data[i], user))

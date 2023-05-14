@@ -55,11 +55,12 @@ err:
 	return NULL;
 }
 
-void ccl_ht2_clear(ccl_ht2 *ht)
+size_t ccl_ht2_clear(ccl_ht2 *ht)
 {
 	ccl_ht2_node *node;
-	int i;
+	size_t i, count;
 
+	count = ht->count;
 	for (i = 0; i < ht->size; i++) {
 		node = ccl_ht2_ptr(ht, i);
 		if (node->key == NULL)
@@ -70,7 +71,7 @@ void ccl_ht2_clear(ccl_ht2 *ht)
 			ht->vfree(node->value);
 		ht->count--;
 	}
-	return;
+	return count;
 }
 
 void ccl_ht2_free(ccl_ht2 *ht)
@@ -120,7 +121,7 @@ static void ccl_ht2_transform(ccl_ht2 *ht, unsigned nsize)
 {
 	ccl_ht2_node *table;
 	ccl_ht2_node *node, *node2;
-	int i, j;
+	size_t i, j;
 	unsigned hn;
 
 	nsize = ccl_ht_prime_geq(nsize);
@@ -294,7 +295,7 @@ bool ccl_ht2_delete(ccl_ht2 *ht, void *key)
 bool ccl_ht2_foreach(ccl_ht2 *ht, ccl_dforeach_cb cb, void *user)
 {               
         ccl_ht2_node *node;
-	int i;
+	size_t i;
 
 	for (i = 0; i < ht->size; i++) {
 		node = ccl_ht2_ptr(ht, i);

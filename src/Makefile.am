@@ -19,7 +19,7 @@
 AM_CFLAGS = \
 	$(WARN_CFLAGS) \
 	-I$(srcdir)/../include/ \
-	-Wall
+	-Wall -Wextra
 
 lib_LTLIBRARIES = libclassic.la
 
