@@ -63,7 +63,7 @@ ccl_vector_iter *ccl_vector_iter_new(ccl_vector *);
 void ccl_vector_iter_free(ccl_vector_iter *);
 void ccl_vector_iter_begin(ccl_vector_iter *);
 void ccl_vector_iter_end(ccl_vector_iter *);
-bool ccl_vector_iter_value(ccl_vector_iter *, void **);
+void *ccl_vector_iter_value(ccl_vector_iter *);
 bool ccl_vector_iter_prev(ccl_vector_iter *);
 bool ccl_vector_iter_prevn(ccl_vector_iter *, size_t);
 bool ccl_vector_iter_next(ccl_vector_iter *);
@@ -72,7 +72,8 @@ bool ccl_vector_iter_unlink(ccl_vector_iter *, void **);
 bool ccl_vector_iter_unlinkn(ccl_vector_iter *, size_t, void **);
 bool ccl_vector_iter_delete(ccl_vector_iter *);
 bool ccl_vector_iter_deleten(ccl_vector_iter *, size_t);
-bool ccl_vector_iter_insert(ccl_vector_iter *, void *);
+bool ccl_vector_iter_insertb(ccl_vector_iter *, void *);
+bool ccl_vector_iter_inserta(ccl_vector_iter *, void *);
 bool ccl_vector_iter_insertn(ccl_vector_iter *, size_t, void **);
 int ccl_vector_iter_cmp(void *, ccl_vector_iter *);
 

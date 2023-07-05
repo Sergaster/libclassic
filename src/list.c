@@ -367,6 +367,8 @@ bool ccl_list_iter_insertb(ccl_list_iter *it, void *v)	/* before */
 	node2 = it->node;
 	if (node2->prev == NULL)
 		list->head = node;
+	else
+		node2->prev->next = node;
 	node->prev = node2->prev;
 	node->next = node2;
 	node2->prev = node;
@@ -388,6 +390,8 @@ bool ccl_list_iter_inserta(ccl_list_iter *it, void *v)	/* after */
 	node2 = it->node;
 	if (node2->next == NULL)
 		list->tail = node;
+	else
+		node2->next->prev = node;
 	node->next = node2->next;
 	node->prev = node2;
 	node2->next = node;
